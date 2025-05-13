@@ -1,84 +1,66 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/layout :: html(~{::title}, ~{::main})">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ödemeler - Kütüphane Yönetim Sistemi</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <!-- Include header -->
-    <div th:replace="layout/layout :: header"></div>
-    
-    <div class="container">
-        <div th:if="${mesaj}" class="alert success">
-            <span th:text="${mesaj}"></span>
-        </div>
-        <div th:if="${hata}" class="alert error">
-            <span th:text="${hata}"></span>
-        </div>
-        
-        <!-- Main content -->
-        <main>
-            <div class="card">
-                <div class="card-header">
-                    <h2>Ödeme Listesi</h2>
-                    <a th:href="@{/odemeler/odenmemis-cezalar}" class="btn btn-warning">Ödenmemiş Cezalar</a>
-                </div>
-                
-                <div class="filter-buttons">
-                    <a th:href="@{/odemeler}" class="btn" th:classappend="${durum == null ? 'btn-primary' : 'btn-secondary'}">Tümü</a>
-                    <a th:href="@{/odemeler(durum='TAMAMLANDI')}" class="btn" th:classappend="${durum == 'TAMAMLANDI' ? 'btn-primary' : 'btn-secondary'}">Tamamlanan</a>
-                    <a th:href="@{/odemeler(durum='IPTAL_EDILDI')}" class="btn" th:classappend="${durum == 'IPTAL_EDILDI' ? 'btn-primary' : 'btn-secondary'}">İptal Edilen</a>
-                </div>
-                
-                <table th:if="${not #lists.isEmpty(odemeler)}">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Kullanıcı</th>
-                            <th>Tutar</th>
-                            <th>Ödeme Tarihi</th>
-                            <th>Ödeme Yöntemi</th>
-                            <th>Durum</th>
-                            <th>İşlemler</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="odeme : ${odemeler}">
-                            <td th:text="${odeme.no}">1</td>
-                            <td th:text="${odeme.kullanici != null ? odeme.kullanici.ad + ' ' + odeme.kullanici.soyad : ''}">Ahmet Yılmaz</td>
-                            <td th:text="${odeme.tutar + ' TL'}">50 TL</td>
-                            <td th:text="${#temporals.format(odeme.odemeTarihi, 'dd/MM/yyyy HH:mm')}">01/01/2023</td>
-                            <td th:text="${odeme.odemeYontemi}">NAKIT</td>
-                            <td>
-                                <span class="status" 
-                                      th:classappend="${odeme.durum == 'TAMAMLANDI' ? 'status-completed' : 'status-cancelled'}" 
-                                      th:text="${odeme.durum}">Durum</span>
-                            </td>
-                            <td>
-                                <a th:href="@{/odemeler/{no}(no=${odeme.no})}" class="btn btn-primary">Detay</a>
-                                <form th:if="${odeme.durum == 'TAMAMLANDI'}" th:action="@{/odemeler/iptal/{no}(no=${odeme.no})}" method="post" style="display: inline;">
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Bu ödemeyi iptal etmek istiyor musunuz?')">İptal Et</button>
-                                </form>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <div th:if="${#lists.isEmpty(odemeler)}" class="alert info">
-                    <span th:if="${durum != null}">
-                        "<span th:text="${durum}"></span>" durumunda ödeme kaydı bulunmamaktadır.
-                    </span>
-                    <span th:if="${durum == null}">
-                        Henüz ödeme kaydı bulunmamaktadır.
-                    </span>
-                </div>
+    <main>
+        <div class="card">
+            <div class="card-header">
+                <h2>Ödeme Listesi</h2>
+                <a th:href="@{/odemeler/odenmemis-cezalar}" class="btn btn-warning">Ödenmemiş Cezalar</a>
             </div>
-        </main>
-    </div>
-    
-    <!-- Include footer -->
-    <div th:replace="layout/layout :: footer"></div>
+            
+            <div class="filter-buttons">
+                <a th:href="@{/odemeler}" class="btn" th:classappend="${durum == null ? 'btn-primary' : 'btn-secondary'}">Tümü</a>
+                <a th:href="@{/odemeler(durum='TAMAMLANDI')}" class="btn" th:classappend="${durum == 'TAMAMLANDI' ? 'btn-primary' : 'btn-secondary'}">Tamamlanan</a>
+                <a th:href="@{/odemeler(durum='IPTAL_EDILDI')}" class="btn" th:classappend="${durum == 'IPTAL_EDILDI' ? 'btn-primary' : 'btn-secondary'}">İptal Edilen</a>
+            </div>
+            
+            <table th:if="${not #lists.isEmpty(odemeler)}">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Kullanıcı</th>
+                        <th>Tutar</th>
+                        <th>Ödeme Tarihi</th>
+                        <th>Ödeme Yöntemi</th>
+                        <th>Durum</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="odeme : ${odemeler}">
+                        <td th:text="${odeme.no}">1</td>
+                        <td th:text="${odeme.kullanici != null ? odeme.kullanici.ad + ' ' + odeme.kullanici.soyad : ''}">Ahmet Yılmaz</td>
+                        <td th:text="${odeme.tutar + ' TL'}">50 TL</td>
+                        <td th:text="${#temporals.format(odeme.odemeTarihi, 'dd/MM/yyyy HH:mm')}">01/01/2023</td>
+                        <td th:text="${odeme.odemeYontemi}">NAKIT</td>
+                        <td>
+                            <span class="status" 
+                                  th:classappend="${odeme.durum == 'TAMAMLANDI' ? 'status-completed' : 'status-cancelled'}" 
+                                  th:text="${odeme.durum}">Durum</span>
+                        </td>
+                        <td>
+                            <a th:href="@{/odemeler/{no}(no=${odeme.no})}" class="btn btn-primary">Detay</a>
+                            <form th:if="${odeme.durum == 'TAMAMLANDI'}" th:action="@{/odemeler/iptal/{no}(no=${odeme.no})}" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Bu ödemeyi iptal etmek istiyor musunuz?')">İptal Et</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div th:if="${#lists.isEmpty(odemeler)}" class="alert info">
+                <span th:if="${durum != null}">
+                    "<span th:text="${durum}"></span>" durumunda ödeme kaydı bulunmamaktadır.
+                </span>
+                <span th:if="${durum == null}">
+                    Henüz ödeme kaydı bulunmamaktadır.
+                </span>
+            </div>
+        </div>
+    </main>
 </body>
 </html>
