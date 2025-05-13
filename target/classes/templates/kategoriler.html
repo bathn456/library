@@ -1,66 +1,84 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      th:replace="layout/layout :: html(~{::title}, ~{::main})">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kategoriler - Kütüphane Yönetim Sistemi</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <main>
-        <div class="card">
-            <div class="card-header">
-                <h2>Kategori Listesi</h2>
-                <a th:href="@{/kategoriler/ekle}" class="btn btn-success">Yeni Kategori Ekle</a>
-            </div>
-            
-            <div class="search-form">
-                <form th:action="@{/kategoriler}" method="get">
-                    <input type="text" name="arama" placeholder="Kategori adı ara..." th:value="${arama}">
-                    <button type="submit" class="btn btn-primary">Ara</button>
-                    <a th:href="@{/kategoriler}" class="btn btn-secondary" th:if="${arama != null}">Temizle</a>
-                </form>
-            </div>
-            
-            <div class="filter-buttons">
-                <a th:href="@{/kategoriler}" class="btn" th:classappend="${sadecaUstKategoriler == null ? 'btn-primary' : 'btn-secondary'}">Tüm Kategoriler</a>
-                <a th:href="@{/kategoriler/ust-kategoriler}" class="btn" th:classappend="${sadecaUstKategoriler != null ? 'btn-primary' : 'btn-secondary'}">Üst Kategoriler</a>
-            </div>
-            
-            <table th:if="${not #lists.isEmpty(kategoriler)}">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>İsim</th>
-                        <th>Açıklama</th>
-                        <th>Üst Kategori</th>
-                        <th>Kitap Sayısı</th>
-                        <th>İşlemler</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="kategori : ${kategoriler}">
-                        <td th:text="${kategori.no}">1</td>
-                        <td th:text="${kategori.isim}">Roman</td>
-                        <td th:text="${kategori.aciklama}">Açıklama</td>
-                        <td th:text="${kategori.ustKategoriNo}">-</td>
-                        <td th:text="${kategori.kitaplar != null ? kategori.kitaplar.size() : 0}">5</td>
-                        <td>
-                            <a th:href="@{/kategoriler/{no}(no=${kategori.no})}" class="btn btn-primary">Detay</a>
-                            <a th:href="@{/kategoriler/duzenle/{no}(no=${kategori.no})}" class="btn btn-warning">Düzenle</a>
-                            <a th:href="@{/kategoriler/sil/{no}(no=${kategori.no})}" class="btn btn-danger" onclick="return confirm('Bu kategoriyi silmek istediğinize emin misiniz? İlişkili kitaplar varsa silme işlemi başarısız olabilir.')">Sil</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <div th:if="${#lists.isEmpty(kategoriler)}" class="alert info">
-                <span th:if="${arama != null}">
-                    "<span th:text="${arama}"></span>" için arama sonucu bulunamadı.
-                </span>
-                <span th:if="${arama == null}">
-                    Henüz kategori kaydı bulunmamaktadır.
-                </span>
-            </div>
+    <!-- Include header -->
+    <div th:replace="layout/layout :: header"></div>
+    
+    <div class="container">
+        <div th:if="${mesaj}" class="alert success">
+            <span th:text="${mesaj}"></span>
         </div>
-    </main>
+        <div th:if="${hata}" class="alert error">
+            <span th:text="${hata}"></span>
+        </div>
+        
+        <!-- Main content -->
+        <main>
+            <div class="card">
+                <div class="card-header">
+                    <h2>Kategori Listesi</h2>
+                    <a th:href="@{/kategoriler/ekle}" class="btn btn-success">Yeni Kategori Ekle</a>
+                </div>
+                
+                <div class="search-form">
+                    <form th:action="@{/kategoriler}" method="get">
+                        <input type="text" name="arama" placeholder="Kategori adı ara..." th:value="${arama}">
+                        <button type="submit" class="btn btn-primary">Ara</button>
+                        <a th:href="@{/kategoriler}" class="btn btn-secondary" th:if="${arama != null}">Temizle</a>
+                    </form>
+                </div>
+                
+                <div class="filter-buttons">
+                    <a th:href="@{/kategoriler}" class="btn" th:classappend="${sadecaUstKategoriler == null ? 'btn-primary' : 'btn-secondary'}">Tüm Kategoriler</a>
+                    <a th:href="@{/kategoriler/ust-kategoriler}" class="btn" th:classappend="${sadecaUstKategoriler != null ? 'btn-primary' : 'btn-secondary'}">Üst Kategoriler</a>
+                </div>
+                
+                <table th:if="${not #lists.isEmpty(kategoriler)}">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>İsim</th>
+                            <th>Açıklama</th>
+                            <th>Üst Kategori</th>
+                            <th>Kitap Sayısı</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="kategori : ${kategoriler}">
+                            <td th:text="${kategori.no}">1</td>
+                            <td th:text="${kategori.isim}">Roman</td>
+                            <td th:text="${kategori.aciklama}">Açıklama</td>
+                            <td th:text="${kategori.ustKategoriNo}">-</td>
+                            <td th:text="${kategori.kitaplar != null ? kategori.kitaplar.size() : 0}">5</td>
+                            <td>
+                                <a th:href="@{/kategoriler/{no}(no=${kategori.no})}" class="btn btn-primary">Detay</a>
+                                <a th:href="@{/kategoriler/duzenle/{no}(no=${kategori.no})}" class="btn btn-warning">Düzenle</a>
+                                <a th:href="@{/kategoriler/sil/{no}(no=${kategori.no})}" class="btn btn-danger" onclick="return confirm('Bu kategoriyi silmek istediğinize emin misiniz? İlişkili kitaplar varsa silme işlemi başarısız olabilir.')">Sil</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div th:if="${#lists.isEmpty(kategoriler)}" class="alert info">
+                    <span th:if="${arama != null}">
+                        "<span th:text="${arama}"></span>" için arama sonucu bulunamadı.
+                    </span>
+                    <span th:if="${arama == null}">
+                        Henüz kategori kaydı bulunmamaktadır.
+                    </span>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Include footer -->
+    <div th:replace="layout/layout :: footer"></div>
 </body>
 </html>
