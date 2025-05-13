@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/layout :: html(~{::title}, ~{::main})">
+<head>
+    <title>Kategori Ekle - Kütüphane Yönetim Sistemi</title>
+</head>
+<body>
+    <main>
+        <div class="card">
+            <div class="card-header">
+                <h2>Yeni Kategori Ekle</h2>
+                <a th:href="@{/kategoriler}" class="btn btn-secondary">Kategori Listesine Dön</a>
+            </div>
+            
+            <form th:action="@{/kategoriler/ekle}" method="post" th:object="${kategori}">
+                <div class="form-group">
+                    <label for="isim">Kategori Adı:</label>
+                    <input type="text" id="isim" th:field="*{isim}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="aciklama">Açıklama:</label>
+                    <textarea id="aciklama" th:field="*{aciklama}" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ustKategoriNo">Üst Kategori:</label>
+                    <select id="ustKategoriNo" th:field="*{ustKategoriNo}">
+                        <option value="">Üst Kategori Seçin (Opsiyonel)</option>
+                        <option th:each="ustKategori : ${ustKategoriler}" 
+                                th:value="${ustKategori.no}" 
+                                th:text="${ustKategori.isim}">Üst Kategori</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-success">Kategori Ekle</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

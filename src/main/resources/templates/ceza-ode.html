@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/layout :: html(~{::title}, ~{::main})">
+<head>
+    <title>Ceza Ödeme - Kütüphane Yönetim Sistemi</title>
+</head>
+<body>
+    <main>
+        <div class="card">
+            <div class="card-header">
+                <h2>Ceza Ödeme</h2>
+                <a th:href="@{/odunc-islemleri/{no}(no=${oduncAlma.no})}" class="btn btn-secondary">Ödünç Detayına Dön</a>
+            </div>
+            
+            <div class="detail-section">
+                <div class="detail-row">
+                    <div class="detail-label">İşlem No:</div>
+                    <div class="detail-value" th:text="${oduncAlma.no}">1</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Kullanıcı:</div>
+                    <div class="detail-value">
+                        <a th:if="${oduncAlma.kullanici != null}" th:href="@{/kullanicilar/{no}(no=${oduncAlma.kullanici.no})}" th:text="${oduncAlma.kullanici.ad + ' ' + oduncAlma.kullanici.soyad}">Ahmet Yılmaz</a>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Son Teslim Tarihi:</div>
+                    <div class="detail-value" th:text="${#temporals.format(oduncAlma.sonTeslimTarihi, 'dd/MM/yyyy HH:mm')}">15/01/2023</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Ceza Ücreti:</div>
+                    <div class="detail-value status status-overdue" th:text="${cezaUcreti + ' TL'}">0 TL</div>
+                </div>
+            </div>
+            
+            <form th:if="${cezaUcreti > 0}" th:action="@{/odunc-islemleri/ceza-ode/{oduncAlmaNo}(oduncAlmaNo=${oduncAlma.no})}" method="post">
+                <div class="form-group">
+                    <label for="odemeYontemi">Ödeme Yöntemi:</label>
+                    <select id="odemeYontemi" name="odemeYontemi" required>
+                        <option value="">Ödeme Yöntemi Seçin</option>
+                        <option th:each="yontem : ${odemeYontemleri}" 
+                                th:value="${yontem}" 
+                                th:text="${yontem}">Ödeme Yöntemi</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tutar">Tutar (TL):</label>
+                    <input type="number" id="tutar" name="tutar" th:value="${cezaUcreti}" min="1" required>
+                </div>
+                
+                <button type="submit" class="btn btn-warning">Ödemeyi Tamamla</button>
+            </form>
+            
+            <div th:if="${cezaUcreti <= 0}" class="alert info">
+                Bu ödünç alma işlemi için herhangi bir ceza bulunmamaktadır.
+            </div>
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/layout :: html(~{::title}, ~{::main})">
+<head>
+    <title>Ödünç İşlemleri - Kütüphane Yönetim Sistemi</title>
+</head>
+<body>
+    <main>
+        <div class="card">
+            <div class="card-header">
+                <h2>Ödünç İşlemleri</h2>
+                <a th:href="@{/odunc-islemleri/ekle}" class="btn btn-success">Yeni Ödünç Kaydı</a>
+            </div>
+            
+            <div class="filter-buttons">
+                <a th:href="@{/odunc-islemleri}" class="btn" th:classappend="${durum == null && suresiGecmis == null ? 'btn-primary' : 'btn-secondary'}">Tümü</a>
+                <a th:href="@{/odunc-islemleri(durum='AKTIF')}" class="btn" th:classappend="${durum == 'AKTIF' ? 'btn-primary' : 'btn-secondary'}">Aktif</a>
+                <a th:href="@{/odunc-islemleri(durum='TAMAMLANDI')}" class="btn" th:classappend="${durum == 'TAMAMLANDI' ? 'btn-primary' : 'btn-secondary'}">Tamamlanan</a>
+                <a th:href="@{/odunc-islemleri/suresi-gecmis}" class="btn" th:classappend="${suresiGecmis != null ? 'btn-primary' : 'btn-secondary'}">Süresi Geçmiş</a>
+            </div>
+            
+            <table th:if="${not #lists.isEmpty(oduncAlmalar)}">
+                <thead>
+                    <tr>
+                        <th>İşlem No</th>
+                        <th>Kullanıcı</th>
+                        <th>Ödünç Alma Tarihi</th>
+                        <th>Son Teslim Tarihi</th>
+                        <th>Durum</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="odunc : ${oduncAlmalar}" th:classappend="${odunc.sonTeslimTarihi != null && odunc.sonTeslimTarihi.isBefore(#temporals.createNow()) && odunc.durum == 'AKTIF' ? 'overdue' : ''}">
+                        <td th:text="${odunc.no}">1</td>
+                        <td th:text="${odunc.kullanici != null ? odunc.kullanici.ad + ' ' + odunc.kullanici.soyad : ''}">Ahmet Yılmaz</td>
+                        <td th:text="${#temporals.format(odunc.oduncAlmaTarihi, 'dd/MM/yyyy HH:mm')}">01/01/2023</td>
+                        <td th:text="${#temporals.format(odunc.sonTeslimTarihi, 'dd/MM/yyyy HH:mm')}">15/01/2023</td>
+                        <td>
+                            <span class="status" 
+                                  th:classappend="${odunc.durum == 'AKTIF' ? (odunc.sonTeslimTarihi != null && odunc.sonTeslimTarihi.isBefore(#temporals.createNow()) ? 'status-overdue' : 'status-active') : (odunc.durum == 'TAMAMLANDI' ? 'status-completed' : 'status-cancelled')}" 
+                                  th:text="${odunc.durum}">Durum</span>
+                        </td>
+                        <td>
+                            <a th:href="@{/odunc-islemleri/{no}(no=${odunc.no})}" class="btn btn-primary">Detay</a>
+                            <form th:if="${odunc.durum == 'AKTIF'}" th:action="@{/odunc-islemleri/iade/{no}(no=${odunc.no})}" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-success" onclick="return confirm('Tüm kitapların iadesini onaylıyor musunuz?')">İade Et</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div th:if="${#lists.isEmpty(oduncAlmalar)}" class="alert info">
+                <span th:if="${suresiGecmis != null}">
+                    Süresi geçmiş ödünç kaydı bulunmamaktadır.
+                </span>
+                <span th:if="${durum != null}">
+                    "<span th:text="${durum}"></span>" durumunda ödünç kaydı bulunmamaktadır.
+                </span>
+                <span th:if="${durum == null && suresiGecmis == null}">
+                    Henüz ödünç kaydı bulunmamaktadır.
+                </span>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

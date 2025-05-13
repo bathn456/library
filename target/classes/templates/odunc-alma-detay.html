@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/layout :: html(~{::title}, ~{::main})">
+<head>
+    <title>Ödünç Alma Detayı - Kütüphane Yönetim Sistemi</title>
+</head>
+<body>
+    <main>
+        <div class="card">
+            <div class="card-header">
+                <h2>Ödünç Alma Detayı</h2>
+                <div>
+                    <a th:href="@{/odunc-islemleri}" class="btn btn-secondary">Ödünç İşlemleri Listesine Dön</a>
+                    <a th:if="${oduncAlma.durum == 'AKTIF'}" th:href="@{/odunc-islemleri/ceza-ode/{oduncAlmaNo}(oduncAlmaNo=${oduncAlma.no})}" class="btn btn-warning">Ceza Öde</a>
+                    <form th:if="${oduncAlma.durum == 'AKTIF'}" th:action="@{/odunc-islemleri/iade/{no}(no=${oduncAlma.no})}" method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-success" onclick="return confirm('Tüm kitapların iadesini onaylıyor musunuz?')">Tümünü İade Et</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <div class="detail-row">
+                    <div class="detail-label">İşlem No:</div>
+                    <div class="detail-value" th:text="${oduncAlma.no}">1</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Kullanıcı:</div>
+                    <div class="detail-value">
+                        <a th:if="${oduncAlma.kullanici != null}" th:href="@{/kullanicilar/{no}(no=${oduncAlma.kullanici.no})}" th:text="${oduncAlma.kullanici.ad + ' ' + oduncAlma.kullanici.soyad}">Ahmet Yılmaz</a>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Ödünç Alma Tarihi:</div>
+                    <div class="detail-value" th:text="${#temporals.format(oduncAlma.oduncAlmaTarihi, 'dd/MM/yyyy HH:mm')}">01/01/2023</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Son Teslim Tarihi:</div>
+                    <div class="detail-value" th:text="${#temporals.format(oduncAlma.sonTeslimTarihi, 'dd/MM/yyyy HH:mm')}">15/01/2023</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Durum:</div>
+                    <div class="detail-value">
+                        <span class="status" 
+                              th:classappend="${oduncAlma.durum == 'AKTIF' ? (oduncAlma.sonTeslimTarihi != null && oduncAlma.sonTeslimTarihi.isBefore(#temporals.createNow()) ? 'status-overdue' : 'status-active') : (oduncAlma.durum == 'TAMAMLANDI' ? 'status-completed' : 'status-cancelled')}" 
+                              th:text="${oduncAlma.durum}">Durum</span>
+                    </div>
+                </div>
+                <div class="detail-row" th:if="${cezaUcreti > 0}">
+                    <div class="detail-label">Ceza Ücreti:</div>
+                    <div class="detail-value status status-overdue" th:text="${cezaUcreti + ' TL'}">0 TL</div>
+                </div>
+            </div>
+            
+            <h3 class="section-title">Ödünç Alınan Kitaplar</h3>
+            <table th:if="${not #lists.isEmpty(oduncAlmaOgeleri)}">
+                <thead>
+                    <tr>
+                        <th>Kitap</th>
+                        <th>Adet</th>
+                        <th>İade Tarihi</th>
+                        <th>Durum</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="oge : ${oduncAlmaOgeleri}">
+                        <td>
+                            <a th:if="${oge.kitap != null}" th:href="@{/kitaplar/{no}(no=${oge.kitap.no})}" th:text="${oge.kitap.baslik}">Kitap Adı</a>
+                        </td>
+                        <td th:text="${oge.adet}">1</td>
+                        <td th:text="${oge.iadeTarihi != null ? #temporals.format(oge.iadeTarihi, 'dd/MM/yyyy HH:mm') : '-'}">-</td>
+                        <td>
+                            <span class="status" 
+                                  th:classappend="${oge.durum == 'TESLIM_EDILMEDI' ? 'status-active' : 'status-completed'}" 
+                                  th:text="${oge.durum}">Durum</span>
+                        </td>
+                        <td>
+                            <form th:if="${oge.durum == 'TESLIM_EDILMEDI' && oduncAlma.durum == 'AKTIF'}" th:action="@{/odunc-islemleri/oge-iade/{ogeNo}(ogeNo=${oge.no})}" method="post" style="display: inline;">
+                                <input type="hidden" name="oduncAlmaNo" th:value="${oduncAlma.no}">
+                                <button type="submit" class="btn btn-success" onclick="return confirm('Bu kitabın iadesini onaylıyor musunuz?')">İade Et</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+</html>

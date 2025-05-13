@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/layout :: html(~{::title}, ~{::main})">
+<head>
+    <title>Rezervasyonlar - Kütüphane Yönetim Sistemi</title>
+</head>
+<body>
+    <main>
+        <div class="card">
+            <div class="card-header">
+                <h2>Rezervasyon Listesi</h2>
+                <a th:href="@{/rezervasyonlar/ekle}" class="btn btn-success">Yeni Rezervasyon</a>
+            </div>
+            
+            <div class="filter-buttons">
+                <a th:href="@{/rezervasyonlar}" class="btn" th:classappend="${durum == null && suresiGecmis == null ? 'btn-primary' : 'btn-secondary'}">Tümü</a>
+                <a th:href="@{/rezervasyonlar(durum='BEKLIYOR')}" class="btn" th:classappend="${durum == 'BEKLIYOR' ? 'btn-primary' : 'btn-secondary'}">Bekleyen</a>
+                <a th:href="@{/rezervasyonlar(durum='ONAYLANDI')}" class="btn" th:classappend="${durum == 'ONAYLANDI' ? 'btn-primary' : 'btn-secondary'}">Onaylanan</a>
+                <a th:href="@{/rezervasyonlar(durum='IPTAL_EDILDI')}" class="btn" th:classappend="${durum == 'IPTAL_EDILDI' ? 'btn-primary' : 'btn-secondary'}">İptal Edilen</a>
+                <a th:href="@{/rezervasyonlar/suresi-gecmis}" class="btn" th:classappend="${suresiGecmis != null ? 'btn-primary' : 'btn-secondary'}">Süresi Geçmiş</a>
+            </div>
+            
+            <table th:if="${not #lists.isEmpty(rezervasyonlar)}">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Kullanıcı</th>
+                        <th>Rezervasyon Tarihi</th>
+                        <th>Durum</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="rezervasyon : ${rezervasyonlar}">
+                        <td th:text="${rezervasyon.no}">1</td>
+                        <td th:text="${rezervasyon.kullanici != null ? rezervasyon.kullanici.ad + ' ' + rezervasyon.kullanici.soyad : ''}">Ahmet Yılmaz</td>
+                        <td th:text="${#temporals.format(rezervasyon.rezervasyonTarihi, 'dd/MM/yyyy HH:mm')}">01/01/2023</td>
+                        <td>
+                            <span class="status" 
+                                  th:classappend="${rezervasyon.durum == 'BEKLIYOR' ? 'status-pending' : (rezervasyon.durum == 'ONAYLANDI' ? 'status-active' : 'status-cancelled')}" 
+                                  th:text="${rezervasyon.durum}">Durum</span>
+                        </td>
+                        <td>
+                            <a th:href="@{/rezervasyonlar/{no}(no=${rezervasyon.no})}" class="btn btn-primary">Detay</a>
+                            <form th:if="${rezervasyon.durum == 'BEKLIYOR'}" th:action="@{/rezervasyonlar/onayla/{no}(no=${rezervasyon.no})}" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-success" onclick="return confirm('Bu rezervasyonu onaylamak istiyor musunuz?')">Onayla</button>
+                            </form>
+                            <form th:if="${rezervasyon.durum == 'BEKLIYOR' || rezervasyon.durum == 'ONAYLANDI'}" th:action="@{/rezervasyonlar/iptal/{no}(no=${rezervasyon.no})}" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Bu rezervasyonu iptal etmek istiyor musunuz?')">İptal Et</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div th:if="${#lists.isEmpty(rezervasyonlar)}" class="alert info">
+                <span th:if="${suresiGecmis != null}">
+                    Süresi geçmiş rezervasyon bulunmamaktadır.
+                </span>
+                <span th:if="${durum != null}">
+                    "<span th:text="${durum}"></span>" durumunda rezervasyon bulunmamaktadır.
+                </span>
+                <span th:if="${durum == null && suresiGecmis == null}">
+                    Henüz rezervasyon kaydı bulunmamaktadır.
+                </span>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

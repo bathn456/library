@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/layout :: html(~{::title}, ~{::main})">
+<head>
+    <title>Kullanıcı Detayı - Kütüphane Yönetim Sistemi</title>
+</head>
+<body>
+    <main>
+        <div class="card">
+            <div class="card-header">
+                <h2>Kullanıcı Detayı</h2>
+                <div>
+                    <a th:href="@{/kullanicilar}" class="btn btn-secondary">Kullanıcı Listesine Dön</a>
+                    <a th:href="@{/kullanicilar/duzenle/{no}(no=${kullanici.no})}" class="btn btn-warning">Düzenle</a>
+                    <a th:href="@{/kullanicilar/sil/{no}(no=${kullanici.no})}" class="btn btn-danger" onclick="return confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?')">Sil</a>
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <div class="detail-row">
+                    <div class="detail-label">Kullanıcı No:</div>
+                    <div class="detail-value" th:text="${kullanici.no}">1</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Ad:</div>
+                    <div class="detail-value" th:text="${kullanici.ad}">Ad</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Soyad:</div>
+                    <div class="detail-value" th:text="${kullanici.soyad}">Soyad</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Telefon Numarası:</div>
+                    <div class="detail-value" th:text="${kullanici.telefonNumarasi}">Telefon</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">E-posta:</div>
+                    <div class="detail-value" th:text="${kullanici.eposta}">E-posta</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Adres:</div>
+                    <div class="detail-value" th:text="${kullanici.adres}">Adres</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Üyelik Tarihi:</div>
+                    <div class="detail-value" th:text="${kullanici.uyelikTarihi != null ? #temporals.format(kullanici.uyelikTarihi, 'dd/MM/yyyy HH:mm') : ''}">Üyelik Tarihi</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Durum:</div>
+                    <div class="detail-value">
+                        <span class="status" 
+                              th:classappend="${kullanici.durum == 'AKTIF' ? 'status-active' : 'status-cancelled'}" 
+                              th:text="${kullanici.durum}">Durum</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Rol:</div>
+                    <div class="detail-value" th:text="${kullanici.kullaniciRol != null ? kullanici.kullaniciRol.rol : ''}">Rol</div>
+                </div>
+            </div>
+            
+            <div class="actions">
+                <h3>Kullanıcı Durumu</h3>
+                <form th:action="@{/kullanicilar/durum/{no}(no=${kullanici.no})}" method="post">
+                    <select name="durum">
+                        <option value="AKTIF" th:selected="${kullanici.durum == 'AKTIF'}">Aktif</option>
+                        <option value="PASIF" th:selected="${kullanici.durum == 'PASIF'}">Pasif</option>
+                        <option value="ASKIDA" th:selected="${kullanici.durum == 'ASKIDA'}">Askıda</option>
+                    </select>
+                    <button type="submit" class="btn btn-warning">Durumu Güncelle</button>
+                </form>
+            </div>
+            
+            <div th:if="${not #lists.isEmpty(oduncAlmalar)}">
+                <h3 class="section-title">Ödünç Alma Geçmişi</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>İşlem No</th>
+                            <th>Ödünç Alma Tarihi</th>
+                            <th>Son Teslim Tarihi</th>
+                            <th>Durum</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="odunc : ${oduncAlmalar}">
+                            <td th:text="${odunc.no}">1</td>
+                            <td th:text="${#temporals.format(odunc.oduncAlmaTarihi, 'dd/MM/yyyy HH:mm')}">01/01/2023</td>
+                            <td th:text="${#temporals.format(odunc.sonTeslimTarihi, 'dd/MM/yyyy HH:mm')}">15/01/2023</td>
+                            <td>
+                                <span class="status" 
+                                      th:classappend="${odunc.durum == 'AKTIF' ? 'status-active' : (odunc.durum == 'TAMAMLANDI' ? 'status-completed' : 'status-cancelled')}" 
+                                      th:text="${odunc.durum}">Durum</span>
+                            </td>
+                            <td>
+                                <a th:href="@{/odunc-islemleri/{no}(no=${odunc.no})}" class="btn btn-primary">Detay</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="detail-section">
+                <h3 class="section-title">Ceza Bilgileri</h3>
+                <div class="detail-row">
+                    <div class="detail-label">Toplam Ceza Miktarı:</div>
+                    <div class="detail-value" th:text="${toplamCeza + ' TL'}">0 TL</div>
+                </div>
+            </div>
+            
+            <div class="actions">
+                <h3>Hızlı İşlemler</h3>
+                <div class="button-group">
+                    <a th:href="@{/odunc-islemleri/ekle}" class="btn btn-success">Ödünç Ver</a>
+                    <a th:href="@{/rezervasyonlar/ekle}" class="btn btn-primary">Rezervasyon Yap</a>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

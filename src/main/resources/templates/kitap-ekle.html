@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/layout :: html(~{::title}, ~{::main})">
+<head>
+    <title>Kitap Ekle - Kütüphane Yönetim Sistemi</title>
+</head>
+<body>
+    <main>
+        <div class="card">
+            <div class="card-header">
+                <h2>Yeni Kitap Ekle</h2>
+                <a th:href="@{/kitaplar}" class="btn btn-secondary">Kitap Listesine Dön</a>
+            </div>
+            
+            <form th:action="@{/kitaplar/ekle}" method="post" th:object="${kitap}">
+                <div class="form-group">
+                    <label for="baslik">Başlık:</label>
+                    <input type="text" id="baslik" th:field="*{baslik}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="yazar">Yazar:</label>
+                    <input type="text" id="yazar" th:field="*{yazar}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="isbn">ISBN:</label>
+                    <input type="text" id="isbn" th:field="*{isbn}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="yayinYili">Yayın Yılı:</label>
+                    <input type="date" id="yayinYili" th:field="*{yayinYili}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="kategori">Kategori:</label>
+                    <select id="kategori" th:field="*{kategori.no}">
+                        <option value="">Kategori Seçin</option>
+                        <option th:each="kategori : ${kategoriler}" 
+                                th:value="${kategori.no}" 
+                                th:text="${kategori.isim}">Kategori Adı</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="toplamAdet">Toplam Adet:</label>
+                    <input type="number" id="toplamAdet" th:field="*{toplamAdet}" min="1" required>
+                </div>
+                
+                <button type="submit" class="btn btn-success">Kitap Ekle</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

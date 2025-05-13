@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/layout :: html(~{::title}, ~{::main})">
+<head>
+    <title>Kullanıcı Ekle - Kütüphane Yönetim Sistemi</title>
+</head>
+<body>
+    <main>
+        <div class="card">
+            <div class="card-header">
+                <h2>Yeni Kullanıcı Ekle</h2>
+                <a th:href="@{/kullanicilar}" class="btn btn-secondary">Kullanıcı Listesine Dön</a>
+            </div>
+            
+            <form th:action="@{/kullanicilar/ekle}" method="post" th:object="${kullanici}">
+                <div class="form-group">
+                    <label for="ad">Ad:</label>
+                    <input type="text" id="ad" th:field="*{ad}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="soyad">Soyad:</label>
+                    <input type="text" id="soyad" th:field="*{soyad}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="telefonNumarasi">Telefon Numarası:</label>
+                    <input type="tel" id="telefonNumarasi" th:field="*{telefonNumarasi}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="eposta">E-posta:</label>
+                    <input type="email" id="eposta" th:field="*{eposta}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="adres">Adres:</label>
+                    <textarea id="adres" th:field="*{adres}" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="durum">Durum:</label>
+                    <select id="durum" th:field="*{durum}">
+                        <option value="AKTIF">Aktif</option>
+                        <option value="PASIF">Pasif</option>
+                        <option value="ASKIDA">Askıda</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-success">Kullanıcı Ekle</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

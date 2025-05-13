@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/layout :: html(~{::title}, ~{::main})">
+<head>
+    <title>Kategori Detayı - Kütüphane Yönetim Sistemi</title>
+</head>
+<body>
+    <main>
+        <div class="card">
+            <div class="card-header">
+                <h2>Kategori Detayı</h2>
+                <div>
+                    <a th:href="@{/kategoriler}" class="btn btn-secondary">Kategori Listesine Dön</a>
+                    <a th:href="@{/kategoriler/duzenle/{no}(no=${kategori.no})}" class="btn btn-warning">Düzenle</a>
+                    <a th:href="@{/kategoriler/sil/{no}(no=${kategori.no})}" class="btn btn-danger" onclick="return confirm('Bu kategoriyi silmek istediğinize emin misiniz? İlişkili kitaplar varsa silme işlemi başarısız olabilir.')">Sil</a>
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <div class="detail-row">
+                    <div class="detail-label">Kategori No:</div>
+                    <div class="detail-value" th:text="${kategori.no}">1</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">İsim:</div>
+                    <div class="detail-value" th:text="${kategori.isim}">Roman</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Açıklama:</div>
+                    <div class="detail-value" th:text="${kategori.aciklama}">Açıklama</div>
+                </div>
+                <div class="detail-row" th:if="${ustKategori != null}">
+                    <div class="detail-label">Üst Kategori:</div>
+                    <div class="detail-value">
+                        <a th:href="@{/kategoriler/{no}(no=${ustKategori.no})}" th:text="${ustKategori.isim}">Üst Kategori</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div th:if="${not #lists.isEmpty(altKategoriler)}">
+                <h3 class="section-title">Alt Kategoriler</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>İsim</th>
+                            <th>Açıklama</th>
+                            <th>Kitap Sayısı</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="altKategori : ${altKategoriler}">
+                            <td th:text="${altKategori.no}">1</td>
+                            <td th:text="${altKategori.isim}">Alt Kategori</td>
+                            <td th:text="${altKategori.aciklama}">Açıklama</td>
+                            <td th:text="${altKategori.kitaplar != null ? altKategori.kitaplar.size() : 0}">5</td>
+                            <td>
+                                <a th:href="@{/kategoriler/{no}(no=${altKategori.no})}" class="btn btn-primary">Detay</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div th:if="${not #lists.isEmpty(kategori.kitaplar)}">
+                <h3 class="section-title">Kitaplar</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Başlık</th>
+                            <th>Yazar</th>
+                            <th>ISBN</th>
+                            <th>Toplam Adet</th>
+                            <th>Mevcut Adet</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="kitap : ${kategori.kitaplar}">
+                            <td th:text="${kitap.no}">1</td>
+                            <td th:text="${kitap.baslik}">Kitap Başlığı</td>
+                            <td th:text="${kitap.yazar}">Kitap Yazarı</td>
+                            <td th:text="${kitap.isbn}">ISBN</td>
+                            <td th:text="${kitap.toplamAdet}">5</td>
+                            <td th:text="${kitap.mevcutAdet}">3</td>
+                            <td>
+                                <a th:href="@{/kitaplar/{no}(no=${kitap.no})}" class="btn btn-primary">Detay</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="actions">
+                <h3>Hızlı İşlemler</h3>
+                <div class="button-group">
+                    <a th:href="@{/kitaplar/ekle}" class="btn btn-success">Bu Kategoride Kitap Ekle</a>
+                    <a th:href="@{/kategoriler/ekle}" class="btn btn-primary">Alt Kategori Ekle</a>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

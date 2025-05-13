@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitaplar - Kütüphane Yönetim Sistemi</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <!-- Include header -->
+    <div th:replace="layout/layout :: header"></div>
+    
+    <div class="container">
+        <div th:if="${mesaj}" class="alert success">
+            <span th:text="${mesaj}"></span>
+        </div>
+        <div th:if="${hata}" class="alert error">
+            <span th:text="${hata}"></span>
+        </div>
+        
+        <!-- Main content -->
+        <main>
+            <div class="card">
+                <div class="card-header">
+                    <h2>Kitap Listesi</h2>
+                    <a th:href="@{/kitaplar/ekle}" class="btn btn-success">Yeni Kitap Ekle</a>
+                </div>
+                
+                <div class="search-form">
+                    <form th:action="@{/kitaplar}" method="get">
+                        <input type="text" name="arama" placeholder="Kitap başlığı ara..." th:value="${arama}">
+                        <button type="submit" class="btn btn-primary">Ara</button>
+                        <a th:href="@{/kitaplar}" class="btn btn-secondary" th:if="${arama != null}">Temizle</a>
+                    </form>
+                </div>
+                
+                <div class="filter-buttons">
+                    <a th:href="@{/kitaplar}" class="btn" th:classappend="${sadeceMevcut == null ? 'btn-primary' : 'btn-secondary'}">Tüm Kitaplar</a>
+                    <a th:href="@{/kitaplar/mevcut}" class="btn" th:classappend="${sadeceMevcut != null ? 'btn-primary' : 'btn-secondary'}">Mevcut Kitaplar</a>
+                </div>
+                
+                <table th:if="${not #lists.isEmpty(kitaplar)}">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Başlık</th>
+                            <th>Yazar</th>
+                            <th>ISBN</th>
+                            <th>Kategori</th>
+                            <th>Toplam Adet</th>
+                            <th>Mevcut Adet</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="kitap : ${kitaplar}">
+                            <td th:text="${kitap.no}">1</td>
+                            <td th:text="${kitap.baslik}">Kitap Başlığı</td>
+                            <td th:text="${kitap.yazar}">Kitap Yazarı</td>
+                            <td th:text="${kitap.isbn}">ISBN</td>
+                            <td th:text="${kitap.kategori != null ? kitap.kategori.isim : ''}">Kategori</td>
+                            <td th:text="${kitap.toplamAdet}">5</td>
+                            <td th:text="${kitap.mevcutAdet}">3</td>
+                            <td>
+                                <a th:href="@{/kitaplar/{no}(no=${kitap.no})}" class="btn btn-primary">Detay</a>
+                                <a th:href="@{/kitaplar/duzenle/{no}(no=${kitap.no})}" class="btn btn-warning">Düzenle</a>
+                                <a th:href="@{/kitaplar/sil/{no}(no=${kitap.no})}" class="btn btn-danger" onclick="return confirm('Bu kitabı silmek istediğinize emin misiniz?')">Sil</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div th:if="${#lists.isEmpty(kitaplar)}" class="alert info">
+                    <span th:if="${arama != null}">
+                        "<span th:text="${arama}"></span>" için arama sonucu bulunamadı.
+                    </span>
+                    <span th:if="${arama == null}">
+                        Henüz kitap kaydı bulunmamaktadır.
+                    </span>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Include footer -->
+    <div th:replace="layout/layout :: footer"></div>
+</body>
+</html>

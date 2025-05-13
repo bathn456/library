@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/layout :: html(~{::title}, ~{::main})">
+<head>
+    <title>Ödeme Detayı - Kütüphane Yönetim Sistemi</title>
+</head>
+<body>
+    <main>
+        <div class="card">
+            <div class="card-header">
+                <h2>Ödeme Detayı</h2>
+                <div>
+                    <a th:href="@{/odemeler}" class="btn btn-secondary">Ödeme Listesine Dön</a>
+                    <form th:if="${odeme.durum == 'TAMAMLANDI'}" th:action="@{/odemeler/iptal/{no}(no=${odeme.no})}" method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Bu ödemeyi iptal etmek istiyor musunuz?')">İptal Et</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <div class="detail-row">
+                    <div class="detail-label">Ödeme No:</div>
+                    <div class="detail-value" th:text="${odeme.no}">1</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Kullanıcı:</div>
+                    <div class="detail-value">
+                        <a th:if="${odeme.kullanici != null}" th:href="@{/kullanicilar/{no}(no=${odeme.kullanici.no})}" th:text="${odeme.kullanici.ad + ' ' + odeme.kullanici.soyad}">Ahmet Yılmaz</a>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Tutar:</div>
+                    <div class="detail-value" th:text="${odeme.tutar + ' TL'}">50 TL</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Ödeme Tarihi:</div>
+                    <div class="detail-value" th:text="${#temporals.format(odeme.odemeTarihi, 'dd/MM/yyyy HH:mm')}">01/01/2023</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Ödeme Yöntemi:</div>
+                    <div class="detail-value" th:text="${odeme.odemeYontemi}">NAKIT</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Durum:</div>
+                    <div class="detail-value">
+                        <span class="status" 
+                              th:classappend="${odeme.durum == 'TAMAMLANDI' ? 'status-completed' : 'status-cancelled'}" 
+                              th:text="${odeme.durum}">Durum</span>
+                    </div>
+                </div>
+            </div>
+            
+            <h3 class="section-title">Ceza Ödemeleri</h3>
+            <table th:if="${not #lists.isEmpty(cezaOdemeleri)}">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Ceza No</th>
+                        <th>Ödenen Tutar</th>
+                        <th>Ödeme Tarihi</th>
+                        <th>Durum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="cezaOdemesi : ${cezaOdemeleri}">
+                        <td th:text="${cezaOdemesi.no}">1</td>
+                        <td th:text="${cezaOdemesi.cezaNo}">100</td>
+                        <td th:text="${cezaOdemesi.odenmisTutar + ' TL'}">50 TL</td>
+                        <td th:text="${#temporals.format(cezaOdemesi.tarihSaat, 'dd/MM/yyyy HH:mm')}">01/01/2023</td>
+                        <td>
+                            <span class="status" 
+                                  th:classappend="${cezaOdemesi.odendiMi ? 'status-completed' : 'status-cancelled'}" 
+                                  th:text="${cezaOdemesi.odendiMi ? 'ÖDENDİ' : 'ÖDENMEDİ'}">Durum</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div th:if="${#lists.isEmpty(cezaOdemeleri)}" class="alert info">
+                Bu ödeme kaydına ait herhangi bir ceza ödemesi bulunmamaktadır.
+            </div>
+        </div>
+    </main>
+</body>
+</html>

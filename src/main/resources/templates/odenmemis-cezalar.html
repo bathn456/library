@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/layout :: html(~{::title}, ~{::main})">
+<head>
+    <title>Ödenmemiş Cezalar - Kütüphane Yönetim Sistemi</title>
+</head>
+<body>
+    <main>
+        <div class="card">
+            <div class="card-header">
+                <h2>Ödenmemiş Cezalar</h2>
+                <a th:href="@{/odemeler}" class="btn btn-secondary">Ödeme Listesine Dön</a>
+            </div>
+            
+            <table th:if="${not #lists.isEmpty(odenmemisCezalar)}">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Ceza No</th>
+                        <th>Ödenmemiş Tutar</th>
+                        <th>Tarih</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="ceza : ${odenmemisCezalar}">
+                        <td th:text="${ceza.no}">1</td>
+                        <td th:text="${ceza.cezaNo}">100</td>
+                        <td th:text="${ceza.odenmisTutar + ' TL'}">50 TL</td>
+                        <td th:text="${#temporals.format(ceza.tarihSaat, 'dd/MM/yyyy HH:mm')}">01/01/2023</td>
+                        <td>
+                            <a th:href="@{/odunc-islemleri/ceza-ode/{oduncAlmaNo}(oduncAlmaNo=${ceza.cezaNo})}" class="btn btn-warning">Ceza Öde</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div th:if="${#lists.isEmpty(odenmemisCezalar)}" class="alert info">
+                Ödenmemiş ceza bulunmamaktadır.
+            </div>
+        </div>
+    </main>
+</body>
+</html>

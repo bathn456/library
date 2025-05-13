@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/layout :: html(~{::title}, ~{::main})">
+<head>
+    <title>Rezervasyon Detayı - Kütüphane Yönetim Sistemi</title>
+</head>
+<body>
+    <main>
+        <div class="card">
+            <div class="card-header">
+                <h2>Rezervasyon Detayı</h2>
+                <div>
+                    <a th:href="@{/rezervasyonlar}" class="btn btn-secondary">Rezervasyon Listesine Dön</a>
+                    <form th:if="${rezervasyon.durum == 'BEKLIYOR'}" th:action="@{/rezervasyonlar/onayla/{no}(no=${rezervasyon.no})}" method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-success" onclick="return confirm('Bu rezervasyonu onaylamak istiyor musunuz?')">Onayla</button>
+                    </form>
+                    <form th:if="${rezervasyon.durum == 'BEKLIYOR' || rezervasyon.durum == 'ONAYLANDI'}" th:action="@{/rezervasyonlar/iptal/{no}(no=${rezervasyon.no})}" method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Bu rezervasyonu iptal etmek istiyor musunuz?')">İptal Et</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="detail-section">
+                <div class="detail-row">
+                    <div class="detail-label">Rezervasyon No:</div>
+                    <div class="detail-value" th:text="${rezervasyon.no}">1</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Kullanıcı:</div>
+                    <div class="detail-value">
+                        <a th:if="${rezervasyon.kullanici != null}" th:href="@{/kullanicilar/{no}(no=${rezervasyon.kullanici.no})}" th:text="${rezervasyon.kullanici.ad + ' ' + rezervasyon.kullanici.soyad}">Ahmet Yılmaz</a>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Rezervasyon Tarihi:</div>
+                    <div class="detail-value" th:text="${#temporals.format(rezervasyon.rezervasyonTarihi, 'dd/MM/yyyy HH:mm')}">01/01/2023</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Durum:</div>
+                    <div class="detail-value">
+                        <span class="status" 
+                              th:classappend="${rezervasyon.durum == 'BEKLIYOR' ? 'status-pending' : (rezervasyon.durum == 'ONAYLANDI' ? 'status-active' : 'status-cancelled')}" 
+                              th:text="${rezervasyon.durum}">Durum</span>
+                    </div>
+                </div>
+            </div>
+            
+            <h3 class="section-title">Rezerve Edilen Kitaplar</h3>
+            <table th:if="${not #lists.isEmpty(rezervasyonOgeleri)}">
+                <thead>
+                    <tr>
+                        <th>Kitap</th>
+                        <th>Adet</th>
+                        <th>Durum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="oge : ${rezervasyonOgeleri}">
+                        <td>
+                            <a th:if="${oge.kitap != null}" th:href="@{/kitaplar/{no}(no=${oge.kitap.no})}" th:text="${oge.kitap.baslik}">Kitap Adı</a>
+                        </td>
+                        <td th:text="${oge.adet}">1</td>
+                        <td>
+                            <span class="status" 
+                                  th:classappend="${oge.durum == 'BEKLIYOR' ? 'status-pending' : (oge.durum == 'ONAYLANDI' ? 'status-active' : 'status-cancelled')}" 
+                                  th:text="${oge.durum}">Durum</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="actions" th:if="${rezervasyon.durum == 'ONAYLANDI'}">
+                <a th:href="@{/odunc-islemleri/ekle}" class="btn btn-success">Ödünç Kaydına Dönüştür</a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

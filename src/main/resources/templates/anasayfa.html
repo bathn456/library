@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anasayfa - Kütüphane Yönetim Sistemi</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <!-- Include header -->
+    <div th:replace="layout/layout :: header"></div>
+    
+    <div class="container">
+        <div th:if="${mesaj}" class="alert success">
+            <span th:text="${mesaj}"></span>
+        </div>
+        <div th:if="${hata}" class="alert error">
+            <span th:text="${hata}"></span>
+        </div>
+        
+        <!-- Main content -->
+        <main>
+            <div class="card">
+                <div class="card-header">
+                    <h2>Kütüphane İstatistikleri</h2>
+                </div>
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <h3>Toplam Kitap</h3>
+                        <div class="number" th:text="${toplamKitapSayisi}">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Mevcut Kitap</h3>
+                        <div class="number" th:text="${mevcutKitapSayisi}">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Toplam Kullanıcı</h3>
+                        <div class="number" th:text="${toplamKullaniciSayisi}">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Aktif Ödünç</h3>
+                        <div class="number" th:text="${aktifOduncSayisi}">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Bekleyen Rezervasyon</h3>
+                        <div class="number" th:text="${bekleyenRezervasyonSayisi}">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Süresi Geçmiş Ödünç</h3>
+                        <div class="number" th:text="${suresiGecmisOduncSayisi}">0</div>
+                    </div>
+                </div>
+            </div>
+            
+            <h2 class="section-title">Hızlı İşlemler</h2>
+            <div class="stats-container">
+                <div class="stat-card">
+                    <h3>Kitap İşlemleri</h3>
+                    <p>Kitap ekle, düzenle veya listele</p>
+                    <a th:href="@{/kitaplar}" class="btn btn-primary">Kitapları Görüntüle</a>
+                    <a th:href="@{/kitaplar/ekle}" class="btn btn-success">Yeni Kitap Ekle</a>
+                </div>
+                <div class="stat-card">
+                    <h3>Kullanıcı İşlemleri</h3>
+                    <p>Kullanıcı ekle, düzenle veya listele</p>
+                    <a th:href="@{/kullanicilar}" class="btn btn-primary">Kullanıcıları Görüntüle</a>
+                    <a th:href="@{/kullanicilar/ekle}" class="btn btn-success">Yeni Kullanıcı Ekle</a>
+                </div>
+                <div class="stat-card">
+                    <h3>Ödünç İşlemleri</h3>
+                    <p>Ödünç verme ve iade işlemleri</p>
+                    <a th:href="@{/odunc-islemleri}" class="btn btn-primary">Ödünç İşlemlerini Görüntüle</a>
+                    <a th:href="@{/odunc-islemleri/ekle}" class="btn btn-success">Yeni Ödünç Kaydı</a>
+                </div>
+                <div class="stat-card">
+                    <h3>Rezervasyon İşlemleri</h3>
+                    <p>Kitap rezervasyonlarını yönet</p>
+                    <a th:href="@{/rezervasyonlar}" class="btn btn-primary">Rezervasyonları Görüntüle</a>
+                    <a th:href="@{/rezervasyonlar/ekle}" class="btn btn-success">Yeni Rezervasyon</a>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Aktif Ödünç İşlemleri</h2>
+                    <a th:href="@{/odunc-islemleri}" class="btn btn-primary">Tümünü Görüntüle</a>
+                </div>
+                <table th:if="${not #lists.isEmpty(aktifOduncler)}">
+                    <thead>
+                        <tr>
+                            <th>İşlem No</th>
+                            <th>Kullanıcı</th>
+                            <th>Ödünç Alma Tarihi</th>
+                            <th>Son Teslim Tarihi</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="odunc : ${aktifOduncler}">
+                            <td th:text="${odunc.no}">1</td>
+                            <td th:text="${odunc.kullanici != null ? odunc.kullanici.ad + ' ' + odunc.kullanici.soyad : ''}">Ahmet Yılmaz</td>
+                            <td th:text="${#temporals.format(odunc.oduncAlmaTarihi, 'dd/MM/yyyy HH:mm')}">01/01/2023</td>
+                            <td th:text="${#temporals.format(odunc.sonTeslimTarihi, 'dd/MM/yyyy HH:mm')}">15/01/2023</td>
+                            <td>
+                                <a th:href="@{/odunc-islemleri/{no}(no=${odunc.no})}" class="btn btn-primary">Detay</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div th:if="${#lists.isEmpty(aktifOduncler)}" class="alert info">
+                    Aktif ödünç işlemi bulunmamaktadır.
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Kitap Listesi</h2>
+                    <a th:href="@{/kitaplar}" class="btn btn-primary">Tümünü Görüntüle</a>
+                </div>
+                <table th:if="${not #lists.isEmpty(sonKitaplar)}">
+                    <thead>
+                        <tr>
+                            <th>Başlık</th>
+                            <th>Yazar</th>
+                            <th>ISBN</th>
+                            <th>Toplam Adet</th>
+                            <th>Mevcut Adet</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="kitap : ${sonKitaplar}">
+                            <td th:text="${kitap.baslik}">Kitap Başlığı</td>
+                            <td th:text="${kitap.yazar}">Kitap Yazarı</td>
+                            <td th:text="${kitap.isbn}">ISBN</td>
+                            <td th:text="${kitap.toplamAdet}">5</td>
+                            <td th:text="${kitap.mevcutAdet}">3</td>
+                            <td>
+                                <a th:href="@{/kitaplar/{no}(no=${kitap.no})}" class="btn btn-primary">Detay</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div th:if="${#lists.isEmpty(sonKitaplar)}" class="alert info">
+                    Henüz kitap kaydı bulunmamaktadır.
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Include footer -->
+    <div th:replace="layout/layout :: footer"></div>
+</body>
+</html>
