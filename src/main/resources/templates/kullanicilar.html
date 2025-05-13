@@ -1,65 +1,83 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      th:replace="layout/layout :: html(~{::title}, ~{::main})">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kullanıcılar - Kütüphane Yönetim Sistemi</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <main>
-        <div class="card">
-            <div class="card-header">
-                <h2>Kullanıcı Listesi</h2>
-                <a th:href="@{/kullanicilar/ekle}" class="btn btn-success">Yeni Kullanıcı Ekle</a>
-            </div>
-            
-            <div class="search-form">
-                <form th:action="@{/kullanicilar}" method="get">
-                    <input type="text" name="arama" placeholder="Ad veya soyad ile ara..." th:value="${arama}">
-                    <button type="submit" class="btn btn-primary">Ara</button>
-                    <a th:href="@{/kullanicilar}" class="btn btn-secondary" th:if="${arama != null}">Temizle</a>
-                </form>
-            </div>
-            
-            <table th:if="${not #lists.isEmpty(kullanicilar)}">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Ad Soyad</th>
-                        <th>Telefon</th>
-                        <th>E-posta</th>
-                        <th>Durum</th>
-                        <th>İşlemler</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="kullanici : ${kullanicilar}">
-                        <td th:text="${kullanici.no}">1</td>
-                        <td th:text="${kullanici.ad + ' ' + kullanici.soyad}">Ad Soyad</td>
-                        <td th:text="${kullanici.telefonNumarasi}">Telefon</td>
-                        <td th:text="${kullanici.eposta}">E-posta</td>
-                        <td>
-                            <span class="status" 
-                                  th:classappend="${kullanici.durum == 'AKTIF' ? 'status-active' : 'status-cancelled'}" 
-                                  th:text="${kullanici.durum}">Durum</span>
-                        </td>
-                        <td>
-                            <a th:href="@{/kullanicilar/{no}(no=${kullanici.no})}" class="btn btn-primary">Detay</a>
-                            <a th:href="@{/kullanicilar/duzenle/{no}(no=${kullanici.no})}" class="btn btn-warning">Düzenle</a>
-                            <a th:href="@{/kullanicilar/sil/{no}(no=${kullanici.no})}" class="btn btn-danger" onclick="return confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?')">Sil</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <div th:if="${#lists.isEmpty(kullanicilar)}" class="alert info">
-                <span th:if="${arama != null}">
-                    "<span th:text="${arama}"></span>" için arama sonucu bulunamadı.
-                </span>
-                <span th:if="${arama == null}">
-                    Henüz kullanıcı kaydı bulunmamaktadır.
-                </span>
-            </div>
+    <!-- Include header -->
+    <div th:replace="layout/layout :: header"></div>
+    
+    <div class="container">
+        <div th:if="${mesaj}" class="alert success">
+            <span th:text="${mesaj}"></span>
         </div>
-    </main>
+        <div th:if="${hata}" class="alert error">
+            <span th:text="${hata}"></span>
+        </div>
+        
+        <!-- Main content -->
+        <main>
+            <div class="card">
+                <div class="card-header">
+                    <h2>Kullanıcı Listesi</h2>
+                    <a th:href="@{/kullanicilar/ekle}" class="btn btn-success">Yeni Kullanıcı Ekle</a>
+                </div>
+                
+                <div class="search-form">
+                    <form th:action="@{/kullanicilar}" method="get">
+                        <input type="text" name="arama" placeholder="Ad veya soyad ile ara..." th:value="${arama}">
+                        <button type="submit" class="btn btn-primary">Ara</button>
+                        <a th:href="@{/kullanicilar}" class="btn btn-secondary" th:if="${arama != null}">Temizle</a>
+                    </form>
+                </div>
+                
+                <table th:if="${not #lists.isEmpty(kullanicilar)}">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Ad Soyad</th>
+                            <th>Telefon</th>
+                            <th>E-posta</th>
+                            <th>Durum</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="kullanici : ${kullanicilar}">
+                            <td th:text="${kullanici.no}">1</td>
+                            <td th:text="${kullanici.ad + ' ' + kullanici.soyad}">Ad Soyad</td>
+                            <td th:text="${kullanici.telefonNumarasi}">Telefon</td>
+                            <td th:text="${kullanici.eposta}">E-posta</td>
+                            <td>
+                                <span class="status" 
+                                      th:classappend="${kullanici.durum == 'AKTIF' ? 'status-active' : 'status-cancelled'}" 
+                                      th:text="${kullanici.durum}">Durum</span>
+                            </td>
+                            <td>
+                                <a th:href="@{/kullanicilar/{no}(no=${kullanici.no})}" class="btn btn-primary">Detay</a>
+                                <a th:href="@{/kullanicilar/duzenle/{no}(no=${kullanici.no})}" class="btn btn-warning">Düzenle</a>
+                                <a th:href="@{/kullanicilar/sil/{no}(no=${kullanici.no})}" class="btn btn-danger" onclick="return confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?')">Sil</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div th:if="${#lists.isEmpty(kullanicilar)}" class="alert info">
+                    <span th:if="${arama != null}">
+                        "<span th:text="${arama}"></span>" için arama sonucu bulunamadı.
+                    </span>
+                    <span th:if="${arama == null}">
+                        Henüz kullanıcı kaydı bulunmamaktadır.
+                    </span>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Include footer -->
+    <div th:replace="layout/layout :: footer"></div>
 </body>
 </html>
