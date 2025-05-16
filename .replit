@@ -32,3 +32,7 @@ run = ["sh", "-c", "uyuşmazlıkları düzelttim"]
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[[ports]]
+localPort = 35729
+externalPort = 3000
