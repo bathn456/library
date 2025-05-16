@@ -41,10 +41,6 @@ public class Kitap {
     @ManyToOne
     @JoinColumn(name = "kategori_no")
     private Kategori kategori;
-
-@ManyToOne
-@JoinColumn(name = "raf_no")
-private Raf raf;
     
     @ManyToOne
     @JoinColumn(name = "raf_no")

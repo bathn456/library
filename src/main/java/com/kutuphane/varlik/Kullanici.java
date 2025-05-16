@@ -34,7 +34,6 @@ public class Kullanici {
     
     @Column(name = "durum")
     private String durum;
-private Boolean ogrenciMi = false;
     
     @Column(name = "adres")
     private String adres;

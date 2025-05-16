@@ -7,9 +7,9 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-
+  
     <div th:replace="layout/layout :: header"></div>
-
+    
     <div class="container">
         <div th:if="${mesaj}" class="alert success">
             <span th:text="${mesaj}"></span>
@@ -17,8 +17,8 @@
         <div th:if="${hata}" class="alert error">
             <span th:text="${hata}"></span>
         </div>
-
-
+        
+   
         <main>
             <div class="card">
                 <div class="card-header">
@@ -29,16 +29,7 @@
                         <a th:href="@{/kitaplar/sil/{no}(no=${kitap.no})}" class="btn btn-danger" onclick="return confirm('Bu kitabı silmek istediğinize emin misiniz?')">Sil</a>
                     </div>
                 </div>
-
-                <div class="kitap-detay">
-                    <div class="konum-bilgisi">
-                        <h3>Kitap Konumu</h3>
-                        <p>Oda: <span th:text="${kitap.raf?.kitaplik?.oda?.isim ?: 'Belirtilmemiş'}"></span></p>
-                        <p>Kitaplık: <span th:text="${kitap.raf?.kitaplik?.isim ?: 'Belirtilmemiş'}"></span></p>
-                        <p>Raf: <span th:text="${kitap.raf?.isim ?: 'Belirtilmemiş'}"></span></p>
-                    </div>
-                </div>
-
+                
                 <div class="detail-section">
                     <div class="detail-row">
                         <div class="detail-label">Kitap No:</div>
@@ -73,7 +64,7 @@
                         <div class="detail-value" th:text="${kitap.mevcutAdet}">3</div>
                     </div>
                 </div>
-
+                
                 <div class="actions">
                     <h3>Hızlı İşlemler</h3>
                     <div class="button-group">
@@ -84,7 +75,7 @@
             </div>
         </main>
     </div>
-
+    
 
     <div th:replace="layout/layout :: footer"></div>
 </body>
