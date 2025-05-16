@@ -1,4 +1,5 @@
-modules = ["java", "java-17"]
+modules = ["web", "java-graalvm22.3"]
+run = "uyuşmazlıkları düzelttim"
 
 [nix]
 channel = "stable-24_05"
@@ -26,7 +27,7 @@ args = "mvn spring-boot:run -Dspring-boot.run.jvmArguments=\"-Dserver.port=5000\
 waitForPort = 5000
 
 [deployment]
-run = ["sh", "-c", "mvn spring-boot:run -Dspring-boot.run.jvmArguments=\"-Dserver.port=5000\""]
+run = ["sh", "-c", "uyuşmazlıkları düzelttim"]
 
 [[ports]]
 localPort = 5000
