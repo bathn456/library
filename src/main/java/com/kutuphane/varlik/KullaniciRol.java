@@ -20,7 +20,7 @@ public class KullaniciRol {
     private Integer no;
     
     @Column(name = "rol")
-    private String rol;
+    private String rol = "YONETICI"; // Sadece yönetici rolü
     
     @OneToMany(mappedBy = "kullaniciRol")
     private List<Kullanici> kullanicilar = new ArrayList<>();
