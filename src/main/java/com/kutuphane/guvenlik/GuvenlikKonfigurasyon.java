@@ -37,11 +37,23 @@ public class GuvenlikKonfigurasyon {
      * @return Giriş başarılı ise true, değilse false
      */
     public boolean girisYap(String kullaniciAdi, String sifre, HttpSession session) {
-        if (KULLANICILAR.containsKey(kullaniciAdi) && KULLANICILAR.get(kullaniciAdi).equals(sifre)) {
-            session.setAttribute(OTURUM_KULLANICI, kullaniciAdi);
-            girisYapildi = true; // Giriş durumunu 1 (true) yap
-            return true;
+        System.out.println("Giriş denemesi - Kullanıcı: " + kullaniciAdi);
+        
+        if (KULLANICILAR.containsKey(kullaniciAdi)) {
+            String dogruSifre = KULLANICILAR.get(kullaniciAdi);
+            boolean sifreEslesiyor = dogruSifre.equals(sifre);
+            
+            System.out.println("Şifre kontrolü: " + (sifreEslesiyor ? "Başarılı" : "Başarısız"));
+            
+            if (sifreEslesiyor) {
+                session.setAttribute(OTURUM_KULLANICI, kullaniciAdi);
+                girisYapildi = true;
+                System.out.println("Giriş başarılı - Oturum oluşturuldu");
+                return true;
+            }
         }
+        
+        System.out.println("Giriş başarısız");
         return false;
     }
     

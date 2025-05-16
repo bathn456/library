@@ -31,39 +31,39 @@ public class GirisDenetleyici {
     public String giris(@RequestParam(required = false) String hata,
                        @RequestParam(required = false) String cikis,
                        Model model) {
-        
+
         // Kullanıcı zaten giriş yapmışsa anasayfaya yönlendir
         if (guvenlikKonfigurasyon.girisYapildiMi()) {
             return "redirect:/";
         }
-        
+
         if (hata != null) {
-            model.addAttribute("hata", "Kullanıcı adı veya şifre hatalı!");
+            model.addAttribute("hata", "Giriş başarısız! Kullanıcı adı: 'admin', şifre: 'admin123' olmalıdır.");
         }
-        
+
         if (cikis != null) {
             model.addAttribute("mesaj", "Başarıyla çıkış yaptınız.");
         }
-        
+
         return "giris";
     }
-    
+
     @PostMapping("/giris")
     public String girisKontrol(@RequestParam String username, 
                               @RequestParam String password,
                               HttpServletRequest request,
                               Model model) {
-        
+
         HttpSession session = request.getSession(true);
-        
+
         if (guvenlikKonfigurasyon.girisYap(username, password, session)) {
             return "redirect:/";
         } else {
-            model.addAttribute("hata", "Kullanıcı adı veya şifre hatalı!");
+            model.addAttribute("hata", "Giriş başarısız! Kullanıcı adı: 'admin', şifre: 'admin123' olmalıdır.");
             return "giris";
         }
     }
-    
+
     @GetMapping("/cikis")
     public String cikis(HttpServletRequest request) {
         guvenlikKonfigurasyon.cikisYap(request.getSession(false));
