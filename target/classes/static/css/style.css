@@ -247,6 +247,26 @@ select {
     margin: 10px 0;
 }
 
+.auth-buttons {
+    text-align: right;
+    margin: 1rem 0;
+}
+
+.menu-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.welcome-text {
+    text-align: center;
+    margin: 2rem 0;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
 /* Responsive Düzen */
 @media (max-width: 768px) {
     .container {
