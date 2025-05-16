@@ -16,6 +16,10 @@ import java.util.Optional;
 
 @Service
 public class OdemeHizmet {
+    public boolean borcKontrol(Integer kullaniciNo) {
+        List<CezaOdemesi> odenmemisCezalar = cezaOdemesiDepo.findByOdendiMiFalseAndKullaniciNo(kullaniciNo);
+        return !odenmemisCezalar.isEmpty();
+    }
 
     private final OdemeDepo odemeDepo;
     private final CezaOdemesiDepo cezaOdemesiDepo;

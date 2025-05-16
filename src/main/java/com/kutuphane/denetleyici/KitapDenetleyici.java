@@ -33,14 +33,14 @@ public class KitapDenetleyici {
     @GetMapping
     public String kitaplariGoster(Model model, @RequestParam(required = false) String arama) {
         List<Kitap> kitaplar;
-        
+
         if (arama != null && !arama.isEmpty()) {
             kitaplar = kitapHizmet.kitapAra(arama);
             model.addAttribute("arama", arama);
         } else {
             kitaplar = kitapHizmet.tumKitaplariGetir();
         }
-        
+
         model.addAttribute("kitaplar", kitaplar);
         return "kitaplar";
     }
@@ -48,7 +48,7 @@ public class KitapDenetleyici {
     @GetMapping("/{no}")
     public String kitapDetayiGoster(@PathVariable Integer no, Model model) {
         Optional<Kitap> kitap = kitapHizmet.kitapGetir(no);
-        
+
         if (kitap.isPresent()) {
             model.addAttribute("kitap", kitap.get());
             return "kitap-detay";
@@ -80,7 +80,7 @@ public class KitapDenetleyici {
     @GetMapping("/duzenle/{no}")
     public String kitapDuzenleFormuGoster(@PathVariable Integer no, Model model) {
         Optional<Kitap> kitap = kitapHizmet.kitapGetir(no);
-        
+
         if (kitap.isPresent()) {
             model.addAttribute("kitap", kitap.get());
             model.addAttribute("kategoriler", kategoriHizmet.tumKategorileriGetir());
@@ -123,10 +123,10 @@ public class KitapDenetleyici {
     public String kategoriKitaplariGoster(@PathVariable Integer kategoriNo, Model model) {
         List<Kitap> kitaplar = kitapHizmet.kategoriIleGetir(kategoriNo);
         Optional<Kategori> kategori = kategoriHizmet.kategoriGetir(kategoriNo);
-        
+
         model.addAttribute("kitaplar", kitaplar);
         kategori.ifPresent(k -> model.addAttribute("kategori", k));
-        
+
         return "kitaplar";
     }
 
@@ -136,4 +136,10 @@ public class KitapDenetleyici {
         model.addAttribute("sadeceMevcut", true);
         return "kitaplar";
     }
+
+    @GetMapping("/kitaplar")
+   public String kitaplariListele(Model model) {
+     model.addAttribute("kitaplar", kitapHizmet.tumKitaplariGetir());
+    return "kitaplar";
+   }
 }
