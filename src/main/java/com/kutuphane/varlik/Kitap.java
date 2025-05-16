@@ -42,9 +42,26 @@ public class Kitap {
     @JoinColumn(name = "kategori_no")
     private Kategori kategori;
     
+    @ManyToOne
+    @JoinColumn(name = "raf_no")
+    private Raf raf;
+    
     @OneToMany(mappedBy = "kitap")
     private List<OduncAlmaOgesi> oduncAlmaOgeleri = new ArrayList<>();
     
     @OneToMany(mappedBy = "kitap")
     private List<RezervasyonOgesi> rezervasyonOgeleri = new ArrayList<>();
+    
+    // Kitabın konumunu döndüren yardımcı metot
+    public String getKonumBilgisi() {
+        if (raf == null || raf.getKitaplik() == null || raf.getKitaplik().getOda() == null) {
+            return "Konum bilgisi yok";
+        }
+        
+        Oda oda = raf.getKitaplik().getOda();
+        Kitaplik kitaplik = raf.getKitaplik();
+        
+        return String.format("Oda: %s, Kitaplık: %s, Raf: %s", 
+                oda.getIsim(), kitaplik.getIsim(), raf.getIsim());
+    }
 }

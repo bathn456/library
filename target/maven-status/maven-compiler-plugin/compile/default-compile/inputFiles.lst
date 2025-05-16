@@ -4,6 +4,8 @@
 /home/runner/workspace/src/main/java/com/kutuphane/hizmet/OdemeHizmet.java
 /home/runner/workspace/src/main/java/com/kutuphane/denetleyici/KitapDenetleyici.java
 /home/runner/workspace/src/main/java/com/kutuphane/varlik/Odeme.java
+/home/runner/workspace/src/main/java/com/kutuphane/hizmet/OdaHizmet.java
+/home/runner/workspace/src/main/java/com/kutuphane/depo/RafDepo.java
 /home/runner/workspace/src/main/java/com/kutuphane/denetleyici/OdemeDenetleyici.java
 /home/runner/workspace/src/main/java/com/kutuphane/varlik/CezaOdemesi.java
 /home/runner/workspace/src/main/java/com/kutuphane/hizmet/RezervasyonHizmet.java
@@ -13,6 +15,7 @@
 /home/runner/workspace/src/main/java/com/kutuphane/hizmet/KategoriHizmet.java
 /home/runner/workspace/src/main/java/com/kutuphane/varlik/OduncAlma.java
 /home/runner/workspace/src/main/java/com/kutuphane/depo/CezaOdemesiDepo.java
+/home/runner/workspace/src/main/java/com/kutuphane/varlik/Oda.java
 /home/runner/workspace/src/main/java/com/kutuphane/depo/KullaniciDepo.java
 /home/runner/workspace/src/main/java/com/kutuphane/uygulama/KutuphaneUygulamasi.java
 /home/runner/workspace/src/main/java/com/kutuphane/varlik/RezervasyonOgesi.java
@@ -21,6 +24,8 @@
 /home/runner/workspace/src/main/java/com/kutuphane/depo/OduncAlmaDepo.java
 /home/runner/workspace/src/main/java/com/kutuphane/denetleyici/AnasayfaDenetleyici.java
 /home/runner/workspace/src/main/java/com/kutuphane/varlik/Kategori.java
+/home/runner/workspace/src/main/java/com/kutuphane/depo/OdaDepo.java
+/home/runner/workspace/src/main/java/com/kutuphane/varlik/Raf.java
 /home/runner/workspace/src/main/java/com/kutuphane/depo/OduncAlmaOgesiDepo.java
 /home/runner/workspace/src/main/java/com/kutuphane/denetleyici/KategoriDenetleyici.java
 /home/runner/workspace/src/main/java/com/kutuphane/denetleyici/KullaniciDenetleyici.java
@@ -30,5 +35,7 @@
 /home/runner/workspace/src/main/java/com/kutuphane/hizmet/OduncAlmaHizmet.java
 /home/runner/workspace/src/main/java/com/kutuphane/varlik/OduncAlmaOgesi.java
 /home/runner/workspace/src/main/java/com/kutuphane/hizmet/KitapHizmet.java
+/home/runner/workspace/src/main/java/com/kutuphane/depo/KitaplikDepo.java
 /home/runner/workspace/src/main/java/com/kutuphane/varlik/Kullanici.java
+/home/runner/workspace/src/main/java/com/kutuphane/varlik/Kitaplik.java
 /home/runner/workspace/src/main/java/com/kutuphane/depo/KitapDepo.java

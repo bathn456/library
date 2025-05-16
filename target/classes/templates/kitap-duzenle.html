@@ -1,62 +1,85 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      th:replace="layout/layout :: html(~{::title}, ~{::main})">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kitap Düzenle - Kütüphane Yönetim Sistemi</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-    <main>
-        <div class="card">
-            <div class="card-header">
-                <h2>Kitap Düzenle</h2>
-                <div>
-                    <a th:href="@{/kitaplar}" class="btn btn-secondary">Kitap Listesine Dön</a>
-                    <a th:href="@{/kitaplar/{no}(no=${kitap.no})}" class="btn btn-primary">Kitap Detayına Dön</a>
-                </div>
-            </div>
-            
-            <form th:action="@{/kitaplar/duzenle/{no}(no=${kitap.no})}" method="post" th:object="${kitap}">
-                <input type="hidden" th:field="*{no}">
-                
-                <div class="form-group">
-                    <label for="baslik">Başlık:</label>
-                    <input type="text" id="baslik" th:field="*{baslik}" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="yazar">Yazar:</label>
-                    <input type="text" id="yazar" th:field="*{yazar}" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="isbn">ISBN:</label>
-                    <input type="text" id="isbn" th:field="*{isbn}" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="yayinYili">Yayın Yılı:</label>
-                    <input type="date" id="yayinYili" th:field="*{yayinYili}">
-                </div>
-                
-                <div class="form-group">
-                    <label for="kategori">Kategori:</label>
-                    <select id="kategori" th:field="*{kategori.no}">
-                        <option value="">Kategori Seçin</option>
-                        <option th:each="kategori : ${kategoriler}" 
-                                th:value="${kategori.no}" 
-                                th:text="${kategori.isim}"
-                                th:selected="${kitap.kategori != null && kitap.kategori.no == kategori.no}">Kategori Adı</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="toplamAdet">Toplam Adet:</label>
-                    <input type="number" id="toplamAdet" th:field="*{toplamAdet}" min="1" required>
-                </div>
-                
-                <button type="submit" class="btn btn-warning">Kitabı Güncelle</button>
-            </form>
+    <!-- Include header -->
+    <div th:replace="layout/layout :: header"></div>
+    
+    <div class="container">
+        <div th:if="${mesaj}" class="alert success">
+            <span th:text="${mesaj}"></span>
         </div>
-    </main>
+        <div th:if="${hata}" class="alert error">
+            <span th:text="${hata}"></span>
+        </div>
+        
+        <!-- Main content -->
+        <main>
+            <div class="card">
+                <div class="card-header">
+                    <h2>Kitap Düzenle</h2>
+                    <div>
+                        <a th:href="@{/kitaplar}" class="btn btn-secondary">Kitap Listesine Dön</a>
+                        <a th:href="@{/kitaplar/{no}(no=${kitap.no})}" class="btn btn-primary">Kitap Detayına Dön</a>
+                    </div>
+                </div>
+                
+                <form th:action="@{/kitaplar/duzenle/{no}(no=${kitap.no})}" method="post" th:object="${kitap}">
+                    <input type="hidden" th:field="*{no}">
+                    
+                    <div class="form-group">
+                        <label for="baslik">Başlık:</label>
+                        <input type="text" id="baslik" th:field="*{baslik}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="yazar">Yazar:</label>
+                        <input type="text" id="yazar" th:field="*{yazar}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="isbn">ISBN:</label>
+                        <input type="text" id="isbn" th:field="*{isbn}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="yayinYili">Yayın Yılı:</label>
+                        <input type="datetime-local" id="yayinYili" th:field="*{yayinYili}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="kategori">Kategori:</label>
+                        <select id="kategori" th:field="*{kategori.no}">
+                            <option value="">Kategori Seçin</option>
+                            <option th:each="kategori : ${kategoriler}" 
+                                    th:value="${kategori.no}" 
+                                    th:text="${kategori.isim}"
+                                    th:selected="${kitap.kategori != null && kitap.kategori.no == kategori.no}">Kategori Adı</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="toplamAdet">Toplam Adet:</label>
+                        <input type="number" id="toplamAdet" th:field="*{toplamAdet}" min="1" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="mevcutAdet">Mevcut Adet:</label>
+                        <input type="number" id="mevcutAdet" th:field="*{mevcutAdet}" min="0" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-warning">Kitabı Güncelle</button>
+                </form>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Include footer -->
+    <div th:replace="layout/layout :: footer"></div>
 </body>
 </html>
