@@ -3,81 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Kütüphane Yönetim Sistemi</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .menu {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-        .menu-item {
-            margin: 0 15px;
-            padding: 10px 15px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            text-align: center;
-        }
-        .menu-item:hover {
-            background-color: #45a049;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .logout-btn {
-            background-color: #f44336;
-            color: white;
-            padding: 8px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-        }
-        .logout-btn:hover {
-            background-color: #d32f2f;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>Kütüphane Yönetim Sistemi</h1>
-            <!-- Sadece giriş yapılmışsa (boolean=1) çıkış butonu göster -->
-            <a th:if="${girisYapildi}" href="/cikis" class="logout-btn">Çıkış Yap</a>
+            <div class="auth-buttons">
+                <a th:if="${girisYapildi}" href="/cikis" class="btn">Çıkış Yap</a>
+                <a th:unless="${girisYapildi}" href="/giris" class="btn">Yönetici Girişi</a>
+            </div>
         </div>
-        
+
         <div class="menu">
-            <a href="/odalar" class="menu-item">Odalar</a>
-            <a href="/kitapliklar" class="menu-item">Kitaplıklar</a>
-            <a href="/raflar" class="menu-item">Raflar</a>
-            <a href="/kitaplar" class="menu-item">Kitaplar</a>
+            <h2>Genel Erişim</h2>
+            <div class="menu-group">
+                <a href="/kitaplar" class="menu-item">Kitap Kataloğu</a>
+                <a href="/kategoriler" class="menu-item">Kategoriler</a>
+            </div>
+
+            <div th:if="${girisYapildi}">
+                <h2>Yönetici İşlemleri</h2>
+                <div class="menu-group">
+                    <a href="/odalar" class="menu-item">Odalar</a>
+                    <a href="/kitapliklar" class="menu-item">Kitaplıklar</a>
+                    <a href="/raflar" class="menu-item">Raflar</a>
+                    <a href="/kullanicilar" class="menu-item">Kullanıcılar</a>
+                    <a href="/odunc-islemleri" class="menu-item">Ödünç İşlemleri</a>
+                    <a href="/rezervasyonlar" class="menu-item">Rezervasyonlar</a>
+                    <a href="/odemeler" class="menu-item">Ödemeler</a>
+                </div>
+            </div>
         </div>
-        
-        <div>
-            <p>Kütüphane Yönetim Sistemi'ne hoş geldiniz. Yukarıdaki menüden işlem yapmak istediğiniz bölümü seçebilirsiniz.</p>
-            <p>Bu sistem, kütüphanenizdeki kitapları oda-kitaplık-raf hiyerarşisiyle yönetmenizi sağlar.</p>
+
+        <div class="welcome-text">
+            <p>Kütüphane Yönetim Sistemi'ne hoş geldiniz.</p>
+            <p th:unless="${girisYapildi}">Yönetici işlemleri için lütfen giriş yapınız.</p>
         </div>
     </div>
 </body>

@@ -19,8 +19,12 @@ public class GuvenlikFiltresi implements Filter {
    boolean isLoggedIn = (session != null && session.getAttribute("user") != null);
    boolean isLoginPage = httpRequest.getRequestURI().endsWith("/giris");
    boolean isStaticResource = httpRequest.getRequestURI().startsWith("/css/");
+   boolean isPublicPage = httpRequest.getRequestURI().equals("/") || 
+                         httpRequest.getRequestURI().equals("/anasayfa") ||
+                         httpRequest.getRequestURI().startsWith("/kitaplar") ||
+                         httpRequest.getRequestURI().startsWith("/kategoriler");
 
-   if (isLoggedIn || isLoginPage || isStaticResource) {
+   if (isLoggedIn || isLoginPage || isStaticResource || isPublicPage) {
      chain.doFilter(request, response);
    } else {
      httpResponse.sendRedirect("/giris");
