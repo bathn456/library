@@ -26,6 +26,15 @@ task = "shell.exec"
 args = "mvn spring-boot:run -Dspring-boot.run.jvmArguments=\"-Dserver.port=5000\""
 waitForPort = 5000
 
+[[workflows.workflow]]
+name = "Debug Run"
+author = 42782913
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "mvn spring-boot:run -Dspring-boot.run.jvmArguments=\"-Dserver.port=5000 -Ddebug=true\""
+
 [deployment]
 run = ["sh", "-c", "uyuşmazlıkları düzelttim"]
 
