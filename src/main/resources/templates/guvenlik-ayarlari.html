@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Güvenlik Ayarları</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .alert-success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .alert-danger {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+        .nav {
+            margin-bottom: 20px;
+        }
+        .nav a {
+            text-decoration: none;
+            color: #0275d8;
+            margin-right: 15px;
+        }
+        .nav a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a th:href="@{/}">Ana Sayfa</a>
+            <a th:href="@{/cikis}">Çıkış Yap</a>
+        </div>
+        
+        <h1>Güvenlik Ayarları</h1>
+        
+        <div th:if="${mesaj}" class="alert alert-success" th:text="${mesaj}"></div>
+        
+        <form th:action="@{/guvenlik-ayarlari}" method="post">
+            <div class="form-group">
+                <label>Güvenlik Durumu:</label>
+                <select name="guvenlikAktif">
+                    <option value="true" th:selected="${guvenlikAktif == true}">Aktif</option>
+                    <option value="false" th:selected="${guvenlikAktif == false}">Devre Dışı</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <button type="submit">Kaydet</button>
+            </div>
+        </form>
+        
+        <div class="alert alert-danger">
+            <strong>Uyarı!</strong> Güvenlik sistemini devre dışı bırakmak, tüm kullanıcıların sisteme giriş yapmadan erişebilmesine izin verir.
+            Bu özelliği sadece geliştirme ve test amaçlı kullanın.
+        </div>
+    </div>
+</body>
+</html>

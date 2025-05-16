@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/layout :: html(~{::title}, ~{::main})">
+<head>
+    <title>Kitaplık Düzenle | Kütüphane Yönetim Sistemi</title>
+</head>
+<body>
+    <main>
+        <div class="page-header">
+            <h1>Kitaplık Düzenle</h1>
+            <div class="actions">
+                <a th:href="@{/kitapliklar}" class="btn">Kitaplıklar Listesine Dön</a>
+            </div>
+        </div>
+        
+        <div class="form-container">
+            <form th:action="@{/kitapliklar/duzenle/{no}(no=${kitaplik.no})}" method="post" th:object="${kitaplik}">
+                <div class="form-group">
+                    <label for="isim">Kitaplık Adı</label>
+                    <input type="text" id="isim" th:field="*{isim}" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="aciklama">Açıklama</label>
+                    <textarea id="aciklama" th:field="*{aciklama}" class="form-control" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="oda">Oda</label>
+                    <select id="oda" th:field="*{oda}" class="form-control" required>
+                        <option value="">-- Oda Seçin --</option>
+                        <option th:each="oda : ${odalar}" 
+                                th:value="${oda.no}" 
+                                th:text="${oda.isim + ' (Kat: ' + oda.kat + ')'}">
+                            Ana Okuma Salonu (Kat: 1)
+                        </option>
+                    </select>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn primary">Güncelle</button>
+                    <a th:href="@{/kitapliklar}" class="btn link">İptal</a>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

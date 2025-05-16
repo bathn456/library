@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/layout :: html(~{::title}, ~{::main})">
+<head>
+    <title>Yeni Oda Ekle | Kütüphane Yönetim Sistemi</title>
+</head>
+<body>
+    <main>
+        <div class="page-header">
+            <h1>Yeni Oda Ekle</h1>
+            <div class="actions">
+                <a th:href="@{/odalar}" class="btn">Odalar Listesine Dön</a>
+            </div>
+        </div>
+        
+        <div class="form-container">
+            <form th:action="@{/odalar/ekle}" method="post" th:object="${oda}">
+                <div class="form-group">
+                    <label for="isim">Oda Adı</label>
+                    <input type="text" id="isim" th:field="*{isim}" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="aciklama">Açıklama</label>
+                    <textarea id="aciklama" th:field="*{aciklama}" class="form-control" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="kat">Kat</label>
+                    <input type="number" id="kat" th:field="*{kat}" class="form-control" min="0" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn primary">Kaydet</button>
+                    <a th:href="@{/odalar}" class="btn link">İptal</a>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

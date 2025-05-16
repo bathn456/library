@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/layout :: html(~{::title}, ~{::main})">
+<head>
+    <title>Raflar | Kütüphane Yönetim Sistemi</title>
+</head>
+<body>
+    <main>
+        <div class="page-header">
+            <h1>Raflar</h1>
+            <div class="actions">
+                <a th:href="@{/raflar/ekle}" class="btn primary">Yeni Raf Ekle</a>
+            </div>
+        </div>
+        
+        <div th:if="${kitaplik}" class="sub-header">
+            <h2 th:text="'Kitaplık: ' + ${kitaplik.isim}">Kitaplık: A Kitaplığı</h2>
+            <a th:href="@{/kitapliklar/{no}(no=${kitaplik.no})}" class="btn link">Kitaplık Detayına Dön</a>
+        </div>
+        
+        <div class="filter-section">
+            <form th:action="@{/raflar}" method="get">
+                <input type="text" name="arama" th:value="${arama}" placeholder="Raf adı ile ara..." />
+                <button type="submit" class="btn">Ara</button>
+                <a th:href="@{/raflar}" class="btn link">Tümünü Göster</a>
+            </form>
+        </div>
+        
+        <div th:if="${raflar.empty}" class="empty-state">
+            <p>Henüz raf kaydı bulunmamaktadır.</p>
+        </div>
+        
+        <div th:unless="${raflar.empty}" class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Raf Adı</th>
+                        <th>Kitaplık</th>
+                        <th>Oda</th>
+                        <th>Açıklama</th>
+                        <th>Kapasite</th>
+                        <th>Kitap Sayısı</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="raf : ${raflar}">
+                        <td th:text="${raf.no}">1</td>
+                        <td th:text="${raf.isim}">A1 Rafı</td>
+                        <td th:text="${raf.kitaplik != null ? raf.kitaplik.isim : 'Belirtilmemiş'}">A Kitaplığı</td>
+                        <td th:text="${raf.kitaplik != null && raf.kitaplik.oda != null ? raf.kitaplik.oda.isim : 'Belirtilmemiş'}">Ana Okuma Salonu</td>
+                        <td th:text="${raf.aciklama}">Polisiye romanlar</td>
+                        <td th:text="${raf.kapasite}">100</td>
+                        <td th:text="${raf.kitaplar.size()}">25</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a th:href="@{/raflar/{no}(no=${raf.no})}" class="btn small">Detay</a>
+                                <a th:href="@{/kitaplar/raf/{rafNo}(rafNo=${raf.no})}" class="btn small">Kitaplar</a>
+                                <a th:href="@{/raflar/duzenle/{no}(no=${raf.no})}" class="btn small warning">Düzenle</a>
+                                <a th:href="@{/raflar/sil/{no}(no=${raf.no})}" 
+                                   class="btn small danger"
+                                   onclick="return confirm('Bu rafı silmek istediğinize emin misiniz?')">Sil</a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+</html>

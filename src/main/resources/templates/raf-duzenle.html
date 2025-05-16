@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/layout :: html(~{::title}, ~{::main})">
+<head>
+    <title>Raf Düzenle | Kütüphane Yönetim Sistemi</title>
+</head>
+<body>
+    <main>
+        <div class="page-header">
+            <h1>Raf Düzenle</h1>
+            <div class="actions">
+                <a th:href="@{/raflar}" class="btn">Raflar Listesine Dön</a>
+            </div>
+        </div>
+        
+        <div class="form-container">
+            <form th:action="@{/raflar/duzenle/{no}(no=${raf.no})}" method="post" th:object="${raf}">
+                <div class="form-group">
+                    <label for="isim">Raf Adı</label>
+                    <input type="text" id="isim" th:field="*{isim}" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="aciklama">Açıklama</label>
+                    <textarea id="aciklama" th:field="*{aciklama}" class="form-control" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="kapasite">Kapasite</label>
+                    <input type="number" id="kapasite" th:field="*{kapasite}" class="form-control" min="1" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="kitaplik">Kitaplık</label>
+                    <select id="kitaplik" th:field="*{kitaplik}" class="form-control" required>
+                        <option value="">-- Kitaplık Seçin --</option>
+                        <option th:each="kitaplik : ${kitapliklar}" 
+                                th:value="${kitaplik.no}" 
+                                th:text="${kitaplik.isim + (kitaplik.oda != null ? ' (Oda: ' + kitaplik.oda.isim + ')' : '')}">
+                            A Kitaplığı (Oda: Ana Okuma Salonu)
+                        </option>
+                    </select>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn primary">Güncelle</button>
+                    <a th:href="@{/raflar}" class="btn link">İptal</a>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

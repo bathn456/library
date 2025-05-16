@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/layout :: html(~{::title}, ~{::main})">
+<head>
+    <title>Oda Detayı | Kütüphane Yönetim Sistemi</title>
+</head>
+<body>
+    <main>
+        <div class="page-header">
+            <h1 th:text="${oda.isim}">Oda Detayı</h1>
+            <div class="actions">
+                <a th:href="@{/odalar}" class="btn">Odalar Listesine Dön</a>
+                <a th:href="@{/odalar/duzenle/{no}(no=${oda.no})}" class="btn warning">Düzenle</a>
+                <a th:href="@{/kitapliklar/ekle}" class="btn primary">Yeni Kitaplık Ekle</a>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2>Oda Bilgileri</h2>
+            </div>
+            <div class="card-body">
+                <div class="info-row">
+                    <span class="label">Oda No:</span>
+                    <span class="value" th:text="${oda.no}">1</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Oda Adı:</span>
+                    <span class="value" th:text="${oda.isim}">Ana Okuma Salonu</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Açıklama:</span>
+                    <span class="value" th:text="${oda.aciklama}">Merkez okuma salonu</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Kat:</span>
+                    <span class="value" th:text="${oda.kat}">1</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Kitaplık Sayısı:</span>
+                    <span class="value" th:text="${oda.kitapliklar.size()}">5</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section-header">
+            <h2>Odadaki Kitaplıklar</h2>
+            <div class="actions">
+                <a th:href="@{/kitapliklar/ekle}" class="btn primary">Yeni Kitaplık Ekle</a>
+            </div>
+        </div>
+        
+        <div th:if="${oda.kitapliklar.empty}" class="empty-state">
+            <p>Bu odada henüz kitaplık bulunmamaktadır.</p>
+        </div>
+        
+        <div th:unless="${oda.kitapliklar.empty}" class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Kitaplık Adı</th>
+                        <th>Açıklama</th>
+                        <th>Raf Sayısı</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="kitaplik : ${oda.kitapliklar}">
+                        <td th:text="${kitaplik.no}">1</td>
+                        <td th:text="${kitaplik.isim}">A Kitaplığı</td>
+                        <td th:text="${kitaplik.aciklama}">Roman kitaplığı</td>
+                        <td th:text="${kitaplik.raflar.size()}">3</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a th:href="@{/kitapliklar/{no}(no=${kitaplik.no})}" class="btn small">Detay</a>
+                                <a th:href="@{/raflar/kitaplik/{kitaplikNo}(kitaplikNo=${kitaplik.no})}" class="btn small">Raflar</a>
+                                <a th:href="@{/kitapliklar/duzenle/{no}(no=${kitaplik.no})}" class="btn small warning">Düzenle</a>
+                                <a th:href="@{/kitapliklar/sil/{no}(no=${kitaplik.no})}" 
+                                   class="btn small danger"
+                                   onclick="return confirm('Bu kitaplığı silmek istediğinize emin misiniz?')">Sil</a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+</html>
