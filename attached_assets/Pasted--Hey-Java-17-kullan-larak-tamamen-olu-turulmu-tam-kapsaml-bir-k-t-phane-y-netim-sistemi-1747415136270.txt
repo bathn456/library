@@ -1,0 +1,189 @@
+
+---
+
+Hey, Java 17 kullanılarak tamamen oluşturulmuş tam kapsamlı bir **kütüphane yönetim sistemi** istiyorum ve *yalnızca Java* kullanılmalı — JavaScript, React, Tailwind gibi harici CSS kütüphaneleri (Java üzerinden sunulmadıkça) ya da başka hiçbir dil veya teknolojiye izin verilmeyecek. Hem arka uç hem de ön uç yalnızca Java ile oluşturulmalı ve bu kesinlikle pazarlık konusu değil. Proje, Spring Boot uygulaması olacak; arka uç için Spring MVC ve Spring Data JPA kullanılacak, ön uç içinse Thymeleaf (**tercih edilen**) veya JavaServer Faces gibi Java tabanlı bir kullanıcı arayüzü teknolojisi kullanılacak. Kod, deneyimli bir insan geliştirici tarafından yazılmış gibi görünmeli: temiz, okunabilir, anlamlı değişken adları içermeli, doğal açıklamalar ve modüler yapı olmalı. Ön uç kullanıcı dostu, estetik olarak hoş olmalı ve bir UI/UX tasarımcısı tarafından tasarlanmış gibi hissettirmeli, ancak tümü yalnızca Java ile yazılmalı. Bu sistem yalnızca kütüphane yöneticileri için olacak, bu nedenle giriş paneline (örneğin e-posta/şifre) gerek yok — tüm kullanıcıların yönetici olduğunu varsayabilirsiniz. Detaylar aşağıda!
+
+---
+
+### **Veritabanı Şeması**
+
+Şema aşağıdaki tabloları içeren bir kütüphane sistemi içindir. Tüm tabloları ve ilişkileri doğru şekilde uygulayın:
+
+1. **ödünç\_alma** (Ödünç alma kayıtları)
+
+   * `no` (TAMSAYI, Birincil Anahtar)
+   * `odunc_alma_tarihi` (TARİHSAAT)
+   * `son_teslim_tarihi` (TARİHSAAT)
+   * `durum` (METİN)
+   * `toplam_odunc` (TAMSAYI)
+   * İlişkiler: Bir `ödünç_alma` birden çok `ödünç_alma_ogesi` içerir.
+
+2. **ödünç\_alma\_ogesi** (Ödünç alınan kitap detayları)
+
+   * `odunc_id` (TAMSAYI)
+   * `kitap_id` (TAMSAYI)
+   * `adet` (TAMSAYI)
+   * `iade_tarihi` (TARİHSAAT)
+   * `durum` (METİN)
+   * İlişkiler: `ödünç_alma` ile `odunc_id` üzerinden, `kitap` ile `kitap_id` üzerinden bağlantılıdır.
+
+3. **kitap** (Kitaplar)
+
+   * `no` (TAMSAYI, Birincil Anahtar)
+   * `baslik` (METİN)
+   * `yazar` (METİN)
+   * `isbn` (METİN)
+   * `yayinci_yili` (TARİHSAAT)
+   * `toplam_nusalar` (TAMSAYI)
+   * `mevcut_nusalar` (TAMSAYI)
+   * `kategori_id` (TAMSAYI)
+   * İlişkiler: `ödünç_alma_ogesi` ile `kitap_id`, `kategori` ile `kategori_id` üzerinden bağlantılıdır.
+
+4. **kullanici** (Kullanıcılar)
+
+   * `no` (TAMSAYI, Birincil Anahtar)
+   * `telefon_numarasi` (METİN)
+   * `ad` (METİN)
+   * `eposta` (METİN)
+   * `uyelik_tarihi` (TARİHSAAT)
+   * `durum` (METİN)
+   * `adres` (METİN)
+   * `soyad` (METİN)
+   * İlişkiler: `ödünç_alma` ve `rezervasyon` ile `kullanici_id` üzerinden, `kullanici_rolu` ile bağlantılıdır.
+   * Not: Tüm kullanıcılar kütüphane yöneticisidir, bu nedenle kimlik doğrulama gerekmez.
+
+5. **kategori** (Kitap kategorileri)
+
+   * `no` (TAMSAYI, Birincil Anahtar)
+   * `ad` (METİN)
+   * `aciklama` (METİN)
+   * `ust_kategori_id` (TAMSAYI)
+   * İlişkiler: `kitap` ile `kategori_id` üzerinden bağlantılıdır.
+
+6. **rezervasyon** (Rezervasyonlar)
+
+   * `kullanici_id` (TAMSAYI)
+   * `rezervasyon_tarihi` (TARİHSAAT)
+   * `durum` (METİN)
+   * `no` (TAMSAYI, Birincil Anahtar)
+   * İlişkiler: `kullanici` ile `kullanici_id`, `rezervasyon_ogesi` ile `rezervasyon_id` üzerinden bağlantılıdır.
+
+7. **rezervasyon\_ogesi** (Rezervasyon detayları)
+
+   * `rezervasyon_id` (TAMSAYI)
+   * `kitap_id` (TAMSAYI)
+   * `adet` (TAMSAYI)
+   * `durum` (METİN)
+   * İlişkiler: `rezervasyon` ile `rezervasyon_id`, `kitap` ile `kitap_id` üzerinden bağlantılıdır.
+
+8. **odeme** (Ödemeler)
+
+   * `kullanici_id` (TAMSAYI)
+   * `tutar` (TAMSAYI)
+   * `odeme_tarihi` (TARİHSAAT)
+   * `odeme_yontemi` (METİN)
+   * `durum` (METİN)
+   * İlişkiler: `kullanici` ile `kullanici_id`, `ceza_odeme` ile bağlantılıdır.
+
+9. **ceza\_odeme** (Ceza ödemeleri)
+
+   * `no` (TAMSAYI, Birincil Anahtar)
+   * `odenmis_tutar` (TAMSAYI)
+   * `ceza_id` (TAMSAYI)
+   * `odeme_id` (TAMSAYI)
+   * `tarih_saat` (TARİHSAAT)
+   * `odendi_mi` (MANTIKSAL)
+   * İlişkiler: `odeme` ile `odeme_id` üzerinden bağlantılıdır.
+
+10. **kullanici\_rolu** (Kullanıcı rolleri)
+
+* `no` (TAMSAYI, Birincil Anahtar)
+* `rol` (METİN)
+* İlişkiler: `kullanici` ile bağlantılıdır.
+* Not: Tüm kullanıcılar yöneticidir, rol tabanlı yetkilendirme gerekmez.
+
+---
+
+### **Proje Gereksinimleri**
+
+**Teknolojiler**:
+
+* Hem arka uç hem ön uç için **sadece Java 17** kullanılmalı. JavaScript, Python veya başka bir dil kullanılamaz.
+* Arka uç: Spring Boot, Spring MVC, Spring Data JPA.
+* Ön uç: Thymeleaf (**tercih edilen**) veya başka bir Java tabanlı teknoloji. JavaScript tabanlı çerçeveler (React, Angular vb.) veya harici CSS kütüphaneleri yalnızca Java üzerinden sunuluyorsa kullanılabilir.
+* Veritabanı: Kolay test için H2 bellek içi veritabanı.
+* Bağımlılık yönetimi için Maven kullanılmalı.
+
+**Proje Yapısı**:
+
+* Arka uç: Katmanlı mimari kullanılmalı (varlık, depo, hizmet, denetleyici).
+
+  * Varlık sınıfları, tüm tablo ve ilişkileri (bir-çok, çok-bir vb.) doğru şekilde eşlemeli.
+  * Depolar: CRUD işlemleri için Spring Data JPA kullanılmalı.
+  * Hizmet katmanı: İş mantığını ele almalı (kitap ödünç alma, rezervasyon oluşturma vb.).
+  * Denetleyiciler: CRUD ve işlevsel işlemler için RESTful uç noktalar sunmalı (kitap listeleme, ödünç verme vb.).
+
+* Ön uç: Thymeleaf veya başka bir Java tabanlı teknoloji ile kullanıcı dostu arayüz oluşturulmalı. Kütüphane yöneticileri için optimize edilmeli; net gezinme ve sezgisel formlar içermeli.
+
+**Temel İşlevler**:
+
+* Yöneticiler kitapları listeleyebilir ve ödünç alma işlemlerini (`ödünç_alma` ve `ödünç_alma_ogesi`) kaydedebilir.
+* Yöneticiler rezervasyonları yönetebilir (`rezervasyon` ve `rezervasyon_ogesi`).
+* Gecikmiş ödünç alma işlemleri için cezaları hesaplayabilir ve ödemeleri kaydedebilir (`odeme` ve `ceza_odeme`).
+* Giriş paneli gerekmez, çünkü tüm kullanıcılar yöneticidir.
+
+**Kod ve Arayüz Kalitesi**:
+
+* **Kod**: İnsan eliyle yazılmış gibi olmalı:
+
+  * Anlamlı değişken adları kullanılmalı (örneğin `oduncAlmaTarihi`, `kitapBasligi`).
+  * Doğal, yardımcı açıklamalar içermeli (örneğin “Veritabanından tüm kitapları getirir”).
+  * Kod modüler, yeniden kullanılabilir ve gereksiz karmaşıklıktan uzak olmalı.
+
+* **Ön uç**: Bir UI/UX tasarımcısı elinden çıkmış gibi görünmeli:
+
+  * Temiz ve düzenli tablolar, butonlar ve formlar kullanılmalı.
+  * Modern, tutarlı bir tasarım olmalı; boşluklar ve renkler dengeli şekilde uygulanmalı, tamamı Java ile kodlanmalı (örneğin Thymeleaf ile satır içi CSS ya da Java üzerinden sunulan stiller).
+  * Yöneticiler için sezgisel olmalı (örneğin kitapların yanında net “Ödünç Al” butonları olmalı).
+
+**Çıktı Formatı**:
+
+* Tüm kod tek bir yapıda sunulmalı, proje yapısı açıkça gösterilmeli (örnek: `src/main/java/com/kutuphane/varlik/Kitap.java`).
+* Maven `pom.xml`, `application.properties` ve başlangıç verilerini içeren `data.sql` dosyası eklenmeli (en az 2 kullanıcı, 5 kitap, 2 kategori, 1 ödünç alma).
+* Tüm Java dosyaları (varlıklar, depolar, hizmetler, denetleyiciler, ana uygulama sınıfı) dahil edilmeli.
+
+---
+
+### **Ek Notlar**
+
+* Tüm şema tabloları ve ilişkileri doğru şekilde uygulanmalı.
+* Gerçekçi örnek veriler kullanılmalı (örneğin “Bülbülü Öldürmek” gibi kitaplar).
+* Hata yönetimi dahil edilmeli (örneğin, kitap stokta yoksa net bir uyarı gösterilmeli).
+* Gerekirse makul varsayımlar yapılmalı (örneğin, ödünç başına en fazla 3 kitap).
+* Proje çalıştırılabilir bir Spring Boot uygulaması olmalı, Java dışı kod veya bağımlılık içermemeli.
+* Yanıtta JavaScript, harici CSS kütüphaneleri veya Java dışı teknolojilerden bahsedilmemeli.
+
+Front‑end’de hiçbir efekt veya animasyon yok; sadece Thymeleaf ve satır içi CSS
+
+Sisteme yalnızca “yönetici” rolündeki kullanıcılar giriş yapabilir; öğrenci veya başka rol yok
+
+Giriş paneli: kullanıcı adı/parola ile basit bir login formu
+
+Yönetici yani kullanıcı panelinden:
+
+Yeni kitap ekleyebilme
+
+Yeni kitaplık (oda) ekleyebilme
+
+Yeni raf ekleyebilme
+
+Her kitabın kendine özgü “oda‑kitaplık‑raf” numarası ve bilgisi olacak
+
+
+---
+kod satırlarının başındaki boşluk rastgele olacak şekilde 1 veya 2 veya 3 veya 4 karakter olsun
+yönetici(kullanıcı),öğrenci kaydedebilmesi silebilmesi lazım
+kullanıcılar yalnızca yöneticilerden oluşcak
+yöneticiler raf ve kitap ekleyebilecek
+Öğrenci gelcek kitabı kiralicak borcu varsa ödeyecek sonra kitabın yerine bakıcak yeni kitap ekleme veya direkt yeni raf ekleme olcak bunlar olmasını beklediğim işlemler
+
