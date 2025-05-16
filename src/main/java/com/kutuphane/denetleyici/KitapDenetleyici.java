@@ -2,8 +2,10 @@ package com.kutuphane.denetleyici;
 
 import com.kutuphane.hizmet.KategoriHizmet;
 import com.kutuphane.hizmet.KitapHizmet;
+import com.kutuphane.hizmet.RafHizmet;
 import com.kutuphane.varlik.Kategori;
 import com.kutuphane.varlik.Kitap;
+import com.kutuphane.varlik.Raf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,11 +21,13 @@ public class KitapDenetleyici {
 
     private final KitapHizmet kitapHizmet;
     private final KategoriHizmet kategoriHizmet;
+    private final RafHizmet rafHizmet;
 
     @Autowired
-    public KitapDenetleyici(KitapHizmet kitapHizmet, KategoriHizmet kategoriHizmet) {
+    public KitapDenetleyici(KitapHizmet kitapHizmet, KategoriHizmet kategoriHizmet, RafHizmet rafHizmet) {
         this.kitapHizmet = kitapHizmet;
         this.kategoriHizmet = kategoriHizmet;
+        this.rafHizmet = rafHizmet;
     }
 
     @GetMapping
@@ -57,6 +61,7 @@ public class KitapDenetleyici {
     public String kitapEkleFormuGoster(Model model) {
         model.addAttribute("kitap", new Kitap());
         model.addAttribute("kategoriler", kategoriHizmet.tumKategorileriGetir());
+        model.addAttribute("raflar", rafHizmet.tumRaflariGetir());
         return "kitap-ekle";
     }
 
@@ -79,6 +84,7 @@ public class KitapDenetleyici {
         if (kitap.isPresent()) {
             model.addAttribute("kitap", kitap.get());
             model.addAttribute("kategoriler", kategoriHizmet.tumKategorileriGetir());
+            model.addAttribute("raflar", rafHizmet.tumRaflariGetir());
             return "kitap-duzenle";
         } else {
             return "redirect:/kitaplar";

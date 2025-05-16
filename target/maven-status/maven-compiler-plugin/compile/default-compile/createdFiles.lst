@@ -6,6 +6,7 @@ com/kutuphane/depo/RezervasyonOgesiDepo.class
 com/kutuphane/varlik/OduncAlmaOgesi.class
 com/kutuphane/depo/OdemeDepo.class
 com/kutuphane/hizmet/RezervasyonHizmet.class
+com/kutuphane/hizmet/KitaplikHizmet.class
 com/kutuphane/varlik/Oda.class
 com/kutuphane/hizmet/KategoriHizmet.class
 com/kutuphane/hizmet/KullaniciHizmet.class
@@ -15,8 +16,11 @@ com/kutuphane/depo/KitapDepo.class
 com/kutuphane/varlik/RezervasyonOgesi.class
 com/kutuphane/denetleyici/KullaniciDenetleyici.class
 com/kutuphane/denetleyici/OdemeDenetleyici.class
+com/kutuphane/denetleyici/RafDenetleyici.class
 com/kutuphane/varlik/Rezervasyon.class
 com/kutuphane/depo/KullaniciRolDepo.class
+com/kutuphane/hizmet/RafHizmet.class
+com/kutuphane/denetleyici/KitaplikDenetleyici.class
 com/kutuphane/hizmet/OdemeHizmet.class
 com/kutuphane/depo/KullaniciDepo.class
 com/kutuphane/varlik/OduncAlma.class
@@ -34,6 +38,7 @@ com/kutuphane/depo/RezervasyonDepo.class
 com/kutuphane/denetleyici/OduncAlmaDenetleyici.class
 com/kutuphane/varlik/CezaOdemesi.class
 com/kutuphane/depo/OdaDepo.class
+com/kutuphane/denetleyici/OdaDenetleyici.class
 com/kutuphane/depo/RafDepo.class
 com/kutuphane/varlik/KullaniciRol.class
 com/kutuphane/varlik/Raf.class
